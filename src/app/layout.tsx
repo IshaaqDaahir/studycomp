@@ -1,22 +1,4 @@
 import type { Metadata } from "next";
-import profilePic from "../../public/images/IMG_1789.jpg";
-
-import favIcon from "../../public/images/favicon.ico";
-
-import addSVG from "../../public/images/icons/add.svg";
-import arrowLeft from "../../public/images/icons/arrow-left.svg";
-import chevronDown from "../../public/images/icons/chevron-down.svg";
-import deleteSvg from "../../public/images/icons/delete.svg";
-import editSvg from "../../public/images/icons/edit.svg";
-import ellipsisHorizontal from "../../public/images/icons/ellipsis-horizontal.svg";
-import ellipsisVertical from "../../public/images/icons/ellipsis-vertical.svg";
-import lockSVG from "../../public/images/icons/lock.svg";
-import removeSvg from "../../public/images/icons/remove.svg";
-import searchSvg from "../../public/images/icons/search.svg";
-import signOutSvg from "../../public/images/icons/sign-out.svg";
-import toolsSvg from "../../public/images/icons/tools.svg";
-import userGroupSvg from "../../public/images/icons/user-group.svg";
-import userSvg from "../../public/images/icons/user.svg";
 import "../../public/styles/main.css"
 import "../../public/styles/style.css"
 
