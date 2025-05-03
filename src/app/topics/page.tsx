@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 export default function Topics() {
     return (
         <main className="create-room layout">
@@ -5,14 +7,14 @@ export default function Topics() {
                 <div className="layout__box">
                     <div className="layout__boxHeader">
                         <div className="layout__boxTitle">
-                            <a href="#">
-                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                <title>arrow-left</title>
-                                <path
-                                d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z"
-                                ></path>
-                            </svg>
-                            </a>
+                            <Link href="/">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                                    <title>arrow-left</title>
+                                    <path
+                                    d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z"
+                                    ></path>
+                                </svg>
+                            </Link>
                             <h3>Browse Topics</h3>
                         </div>
                     </div>
@@ -32,12 +34,12 @@ export default function Topics() {
                 
                         <ul className="topics__list">
                             <li>
-                                <a href="#" className="active">All <span>100</span></a>
+                                <Link href="/topics" className="active">All <span>100</span></Link>
                             </li>
                 
                             {/* {% for topic in topics %} */}
                             <li>
-                                <a href="#?q=TopicName">Topic Name <span>10</span></a>
+                                <Link href="/">Topic Name <span>10</span></Link>
                             </li>
                             {/* {% endfor %} */}
                         </ul>

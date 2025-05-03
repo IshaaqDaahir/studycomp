@@ -1,26 +1,27 @@
 import Image from "next/image";
 import avatar from "../../../public/images/avatar.svg";
+import Link from "next/link";
 
 export default function FeedComponent() {
     return(
         // {% for room in rooms %}
         <div className="roomListRoom">
             <div className="roomListRoom__header">
-                <a href="#" className="roomListRoom__author">
+                <Link href="/profile" className="roomListRoom__author">
                     <div className="avatar avatar--small">
                     <Image src={avatar} alt="Host Avatar" />
                     </div>
                     <span>@Host UserName</span>
-                </a>
+                </Link>
                 <div className="roomListRoom__actions">
                     <span>Room created | time ago</span>
                 </div>
             </div>
             <div className="roomListRoom__content">
-                <a href="#">Room Name</a>
+                <Link href="/room">Room Name</Link>
             </div>
             <div className="roomListRoom__meta">
-                <a href="#" className="roomListRoom__joined">
+                <Link href="/room" className="roomListRoom__joined">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                     <title>user-group</title>
                     <path
@@ -37,7 +38,7 @@ export default function FeedComponent() {
                     ></path>
                     </svg>
                     10 Joined
-                </a>
+                </Link>
             <p className="roomListRoom__topic">Room Topic Name</p>
             </div>
         </div>

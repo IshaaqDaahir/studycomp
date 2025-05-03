@@ -7,7 +7,7 @@ export default function NavBar(){
     return(
         <header className="header header--loggedIn">
             <div className="container">
-                <Link href="/home" className="header__logo">
+                <Link href="/" className="header__logo">
                     <Image src={logo} alt="Logo Image" />
                     <h1>StudyCompanion</h1>
                 </Link>

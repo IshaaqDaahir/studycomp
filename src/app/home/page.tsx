@@ -1,6 +1,7 @@
 import TopicsComponent from "@/app/topics-component/page";
 import ActivityComponent from "@/app/activity-component/page";
 import FeedComponent from "@/app/feed-component/page";
+import Link from "next/link";
 
 export default function HomePage() {
     return(
@@ -27,8 +28,8 @@ export default function HomePage() {
                     </label>
                 </form>
                 <div className="mobile-menuItems">
-                    <a className="btn btn--main btn--pill" href="#">Browse Topics</a>
-                    <a className="btn btn--main btn--pill" href="#">Recent Activities</a>
+                    <Link className="btn btn--main btn--pill" href="/topics">Browse Topics</Link>
+                    <Link className="btn btn--main btn--pill" href="/activity">Recent Activities</Link>
                 </div>
                 </div>
 
@@ -38,7 +39,7 @@ export default function HomePage() {
                     <p>10 Rooms available</p>
                 </div>
 
-                <a className="btn btn--main" href="#">
+                <Link className="btn btn--main" href="/room-form">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                     <title>add</title>
                     <path
@@ -46,7 +47,7 @@ export default function HomePage() {
                     ></path>
                     </svg>
                     Create Room
-                </a>
+                </Link>
                 </div>
 
                 <div><FeedComponent /></div>
