@@ -1,6 +1,6 @@
 import TopicsComponent from "@/app/topics-component/page";
 import Image from "next/image";
-import FeedComponent from "@/app/feed-component/page";
+import UserFeedComponent from "@/app/user-feed-component/page";
 import ActivityComponent from "@/app/activity-component/page";
 import Link from "next/link";
 import NavBar from "../../navbar/page";
@@ -53,7 +53,7 @@ export default async function Profile({params}) {
                             </h2>
                         </div>
                         </div>
-                        <div><FeedComponent /></div>
+                        <div><UserFeedComponent currentUserId={userId} /></div>
 
                     </div>
                     {/* Room List End */}
