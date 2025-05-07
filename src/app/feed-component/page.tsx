@@ -12,7 +12,7 @@ export default async function FeedComponent() {
             {rooms.map((room) => (
                 <div key={room.id} className="roomListRoom">
                     <div className="roomListRoom__header">
-                        <Link href={`/profile/${room.host.id}`} className="roomListRoom__author">
+                        <Link href={`/profile/${room.host.id}/`} className="roomListRoom__author">
                             <div className="avatar avatar--small">
                                 <Image src={room.host.avatar || avatar} alt="Host Avatar" width={32} height={32} />
                             </div>
@@ -42,9 +42,9 @@ export default async function FeedComponent() {
                                 d="M12 16c3.859 0 7-3.141 7-7s-3.141-7-7-7c-3.859 0-7 3.141-7 7s3.141 7 7 7zM12 4c2.757 0 5 2.243 5 5s-2.243 5-5 5-5-2.243-5-5c0-2.757 2.243-5 5-5z"
                             ></path>
                             </svg>
-                            10 Joined
+                            {room.participants.length}
                         </Link>
-                        <p className="roomListRoom__topic">Room Topic Name</p>
+                        <p className="roomListRoom__topic">{room.topic.name}</p>
                     </div>
                 </div>
             ))}
