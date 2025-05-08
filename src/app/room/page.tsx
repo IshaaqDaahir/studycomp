@@ -5,9 +5,7 @@ import NavBar from "../navbar/page";
 import { fetchFromDjango } from '@/lib/api';
 
 export default async function Room() {
-    const { data: rooms } = await fetchFromDjango('/api/rooms/optimized/', {
-        next: { revalidate: 60 } // Revalidate every 60 seconds
-      });
+    const  rooms = await fetchFromDjango('api/rooms/');
 
     return (
         <div>

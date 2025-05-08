@@ -5,12 +5,12 @@ import ActivityComponent from "@/app/activity-component/page";
 import Link from "next/link";
 import NavBar from "../../navbar/page";
 import { Suspense } from 'react';
+import { fetchFromDjango } from "@/lib/api";
 
 export default async function Profile({params}) {
-    const {userId} = params;
+    const {userId} = await params;
 
-    const data = await fetch(`http://127.0.0.1:8000/api/users/${userId}/`);
-    const user = await data.json();
+    const user = await fetchFromDjango(`api/users/${userId}/`);
 
     return (
         <Suspense fallback={<div>Loading profile...</div>}>

@@ -3,10 +3,10 @@ import ActivityComponent from "@/app/activity-component/page";
 import FeedComponent from "@/app/feed-component/page";
 import Link from "next/link";
 import { Suspense } from 'react';
+import { fetchFromDjango } from "@/lib/api";
 
 export default async function HomePage() {
-    const data = await fetch('http://127.0.0.1:8000/api/rooms/');
-    const rooms = await data.json();
+    const rooms = await fetchFromDjango('api/rooms/');
 
     return(
         <Suspense fallback={<div>Loading dashboard...</div>}>

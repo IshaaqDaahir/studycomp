@@ -1,21 +1,11 @@
 const API_URL = process.env.DJANGO_API_URL;
 
-export async function fetchFromDjango(endpoint, options = {}) {
-  const res = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    next: { 
-      tags: ['django-data'], // For revalidation
-      ...options.next 
-    },
-  });
+export async function fetchFromDjango(endpoint) {
+  const response = await fetch(`${API_URL}${endpoint}`);
 
-  if (!res.ok) {
+  if (!response) {
     throw new Error(`Failed to fetch ${endpoint}`);
   }
 
-  return res.json();
+  return response.json();
 }

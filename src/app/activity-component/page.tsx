@@ -1,22 +1,24 @@
 import Image from "next/image";
-import avatar from "../../../public/images/avatar.svg";
 import Link from "next/link";
+import { fetchFromDjango } from "@/lib/api";
 
-export default function ActivityComponent() {
+export default async function ActivityComponent() {
+    const messages = await fetchFromDjango('api/messages/');
+
     return(
         <div className="activities">
             <div className="activities__header">
                 <h2>Recent Activities</h2>
             </div>
-            {/* {% for message in room_messages %} */}
-                <div className="activities__box">
+            {messages.map(message => (
+                <div key={message.id} className="activities__box">
                 <div className="activities__boxHeader roomListRoom__header">
-                    <Link href="/profile" className="roomListRoom__author">
+                    <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
                         <div className="avatar avatar--small">
-                            <Image src={avatar} alt="Message User Avatar" />
+                            <Image src={message.user.avatar} width={32} height={32} alt="Message User Avatar" />
                         </div>
                         <p>
-                            @UserName
+                            @{message.user.username}
                             <span>Message created|time ago</span>
                         </p>
                     </Link>
@@ -41,6 +43,7 @@ export default function ActivityComponent() {
                     </div>
                 </div>
                 </div>
+            ))}
             {/* {% endfor %} */}
         </div>
     );

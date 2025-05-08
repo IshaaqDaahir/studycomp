@@ -2,10 +2,10 @@ import Image from "next/image";
 import avatar from "../../../public/images/avatar.svg";
 import Link from "next/link";
 import { formatDistanceToNow } from 'date-fns';
+import { fetchFromDjango } from "@/lib/api";
 
 export default async function FeedComponent() {
-    const data = await fetch('http://127.0.0.1:8000/api/rooms/');
-    const rooms = await data.json();
+    const rooms = await fetchFromDjango('api/rooms/');
 
     return(
         <div>
