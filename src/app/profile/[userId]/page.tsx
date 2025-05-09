@@ -6,6 +6,7 @@ import Link from "next/link";
 import NavBar from "../../navbar/page";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
+import UserActivityComponent from "@/app/user-activity-component/page";
 
 export default async function Profile({params}) {
     const {userId} = await params;
@@ -59,7 +60,7 @@ export default async function Profile({params}) {
                     {/* Room List End */}
 
                     {/* < Activities Start */}
-                    <div><ActivityComponent /></div>
+                    <div><UserActivityComponent currentUserId={userId} /></div>
                     {/* Activities End */}
                     </div>
                 </main>
