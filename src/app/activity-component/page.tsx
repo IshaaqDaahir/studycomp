@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
+import { formatDistanceToNow } from 'date-fns';
 
 export default async function ActivityComponent() {
     const messages = await fetchFromDjango('api/messages/');
@@ -19,7 +20,7 @@ export default async function ActivityComponent() {
                         </div>
                         <p>
                             @{message.user.username}
-                            <span>Message created|time ago</span>
+                            <span>{formatDistanceToNow(new Date(message.created))} ago</span>
                         </p>
                     </Link>
 
@@ -37,9 +38,9 @@ export default async function ActivityComponent() {
                     {/* {% endif %} */}
                 </div>
                 <div className="activities__boxContent">
-                    <p>replied to post “<Link href="/room">Room Name</Link>”</p>
+                    <p>replied to post in “<Link href="/room">{message.room.name}</Link>”</p>
                     <div className="activities__boxRoomContent">
-                        Message Body
+                        {message.body}
                     </div>
                 </div>
                 </div>
