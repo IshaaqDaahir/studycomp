@@ -1,9 +1,9 @@
+'use client';
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../../../public/images/logo.svg";
 import avatar from "../../../public/images/avatar.svg";
 import Form from "next/form";
-'use client';
 import { useRouter } from 'next/navigation';
 
 export default function NavBar(){

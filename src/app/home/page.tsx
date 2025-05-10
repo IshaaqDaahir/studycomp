@@ -8,21 +8,19 @@ import { fetchFromDjango } from "@/lib/api";
         export default async function HomePage({ searchParams }) {
             const rooms = await fetchFromDjango('api/rooms/');
             
-            const query = searchParams.q || '';
-            const searchResults = query
-                ? await fetchFromDjango(`api/search/?q=${query}`)
-                : null;
+            // const query = searchParams.q || '';
+            // const searchResults = query
+            //     ? await fetchFromDjango(`api/search/?q=${query}`)
+            //     : "No room matches your search!";
             
             return(
                 <Suspense fallback={<div>Loading dashboard...</div>}>
                     <main className="layout layout--3">
                         <div className="container">
                         
-                        {/* Topics Start */}
+                        {/* Topics Component with search results */}
                         <div><TopicsComponent /></div>
                             
-                        {/* Topics End */}
-
                         {/* Room List Start */}
                         <div className="roomList">
                             <div className="mobile-menu">
@@ -60,13 +58,13 @@ import { fetchFromDjango } from "@/lib/api";
                                 </Link>
                             </div>
 
+                            {/* Feed Component with search results */}
                             <div><FeedComponent /></div>
                         </div>
                         {/* Room List End */}
 
-                        {/* Activities Start */}
+                        {/* Activity Component with search results */}
                         <div><ActivityComponent /></div>
-                        {/* Activities End */}
                         </div>
                     </main>
                 </Suspense>
