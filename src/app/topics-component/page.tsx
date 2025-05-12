@@ -15,7 +15,7 @@ import { fetchFromDjango } from "@/lib/api";
         topic?: {name: string};
     };
     type TopicsComponentProps = {
-        searchParams: { q?: string }; // `q` is optional (may not exist in URL)
+        searchParams: { q?: string }; 
     };
 
 export default async function TopicsComponent({ searchParams }: TopicsComponentProps) {
@@ -52,26 +52,29 @@ export default async function TopicsComponent({ searchParams }: TopicsComponentP
     return(
         <div className="topics">
             <div className="topics__header">
-                <h2>Browse Topics</h2>
+                <h2>{query ? `Topics matching "${query}"` : "Browse Topics"}</h2>
             </div>
             <ul className="topics__list">
                 <li>
-                    <Link href="/" className="active">All <span>{rooms.length}</span></Link>
+                    <Link href="/" className={!query ? `active` : ''}>All <span>{displayRooms.length}</span></Link>
                 </li>
 
                 {uniqueTopics.map((topic: Topic) => (
                     <li key={topic.id}>
-                        <Link href={`/?q=${topic.name}/`}>{topic.name}<span>{topicCounts[topic.name] || 0}</span></Link>
+                        <Link href={`/?q=${topic.name}/`} 
+                        className={query === topic.name ? 'active' : ''}>{topic.name}<span>{topicCounts[topic.name] || 0}</span></Link>
                     </li>
                 ))}
             </ul>
-            <Link className="btn btn--link" href="/search-topics">
-                More
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                    <title>chevron-down</title>
-                    <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
-                </svg>
-            </Link>
+            {!query && (
+                <Link className="btn btn--link" href="/search-topics">
+                    More
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                        <title>chevron-down</title>
+                        <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
+                    </svg>
+                </Link>
+            )}
         </div>
     );
 }

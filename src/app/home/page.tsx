@@ -24,7 +24,7 @@ export default async function HomePage({ searchParams }: TopicsComponentProps) {
                 <div className="container">
                 
                 {/* Topics Component with search results */}
-                <div><TopicsComponent topicsList={searchResults?.topics} query={query} /></div>
+                <div><TopicsComponent searchParams={searchParams} /></div>
                     
                 {/* Room List Start */}
                 <div className="roomList">
