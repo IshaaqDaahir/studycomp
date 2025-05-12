@@ -5,7 +5,7 @@ export default function Dashboard() {
   return (
     <div>
         <div><NavBar /></div>
-        <div><HomePage /></div>
+        <div><HomePage searchParams={{}}/></div>
     </div>
   );
 }

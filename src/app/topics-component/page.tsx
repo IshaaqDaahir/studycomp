@@ -1,7 +1,24 @@
 import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 
-export default async function TopicsComponent({ searchParams }) {
+// Types Declaration
+    type Topic = {
+        id: string | number;
+        name: string;
+    };
+
+    type TopicCounts = {
+        [key: string]: number;
+    };
+
+    type Room = {
+        topic?: {name: string};
+    };
+    type TopicsComponentProps = {
+        searchParams: { q?: string }; // `q` is optional (may not exist in URL)
+    };
+
+export default async function TopicsComponent({ searchParams }: TopicsComponentProps) {
     const query = searchParams.q;
 
     // Fetch both topics and rooms
@@ -15,8 +32,8 @@ export default async function TopicsComponent({ searchParams }) {
     const displayTopics = query ? rooms?.topics || [] : topics;
 
     // Calculate room counts for each topic
-    const topicCounts = {};
-    displayRooms.forEach(room => {
+    const topicCounts: TopicCounts = {};
+    displayRooms.forEach((room: Room) => {
         const topicName = room.topic?.name;
         if (topicName) {
             topicCounts[topicName] = (topicCounts[topicName] || 0) + 1;
@@ -27,10 +44,10 @@ export default async function TopicsComponent({ searchParams }) {
     const uniqueTopics = [
         ...new Map(
             displayTopics
-                .filter(topic => !query || topic.name.toLowerCase().includes(query.toLowerCase()))
-                .map(topic => [topic.name, topic])
+                .filter((topic: Topic) => !query || topic.name.toLowerCase().includes(query.toLowerCase()))
+                .map((topic: Topic) => [topic.name, topic])
         ).values()
-    ];
+    ] as Topic[];
 
     return(
         <div className="topics">
@@ -42,7 +59,7 @@ export default async function TopicsComponent({ searchParams }) {
                     <Link href="/" className="active">All <span>{rooms.length}</span></Link>
                 </li>
 
-                {uniqueTopics.map((topic) => (
+                {uniqueTopics.map((topic: Topic) => (
                     <li key={topic.id}>
                         <Link href={`/?q=${topic.name}/`}>{topic.name}<span>{topicCounts[topic.name] || 0}</span></Link>
                     </li>

@@ -8,8 +8,12 @@ import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
 import UserActivityComponent from "@/app/user-activity-component/page";
 
-export default async function Profile({params}) {
-    const {userId} = await params;
+type ProfileComponentProps = {
+        params: { userId: string | number }; 
+    };
+
+export default async function Profile({ params }: ProfileComponentProps) {
+    const {userId} = params;
 
     const user = await fetchFromDjango(`api/users/${userId}/`);
 
@@ -20,7 +24,7 @@ export default async function Profile({params}) {
                 <main className="profile-page layout layout--3">
                     <div className="container">
                     {/* Topics Start */}
-                    <div><TopicsComponent /></div>
+                    <div><TopicsComponent searchParams={{}}/></div>
                     {/* Topics End */}
 
                     {/* Room List Start */}

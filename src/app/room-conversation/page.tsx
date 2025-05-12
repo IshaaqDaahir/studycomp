@@ -3,16 +3,30 @@ import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
 
-export default async function RoomConversation({ currentRoomId }) {
+// Types Declaration
+    type CurrentRoomId = {
+        currentRoomId: number | string; 
+    };
+
+    type Message = {
+        id: string | number;
+        name: string;
+        user: {id: number, avatar: string, username: string};
+        created: string;
+        room: {id: number};
+        body: string;
+    };
+
+export default async function RoomConversation({ currentRoomId }: CurrentRoomId) {
     const messages = await fetchFromDjango("api/messages/");
 
     // Filter messages by room ID
-    const roomMesssages = messages.filter(message => message.room.id == currentRoomId);
+    const roomMesssages = messages.filter((message: Message) => message.room.id == currentRoomId);
 
     return (
         <div className="room__conversation">
             <div className="threads scroll">
-                {roomMesssages.map((message) => (
+                {roomMesssages.map((message: Message) => (
                     <div key={message.id} className="thread">
                         <div className="thread__top">
                             <div className="thread__author">

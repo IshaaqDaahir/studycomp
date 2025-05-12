@@ -3,7 +3,21 @@ import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
 
-export default async function ActivityComponent() {
+// Types Declaration
+    type Message = {
+        id: string | number;
+        name: string;
+        user: {id: number, avatar: string, username: string};
+        created: string;
+        room: {name: string, id: number};
+        body: string;
+    };
+
+    type TopicsComponentProps = {
+        searchParams: { q?: string }; // `q` is optional (may not exist in URL)
+    };
+
+export default async function ActivityComponent({ searchParams }: TopicsComponentProps) {
     const messages = await fetchFromDjango('api/messages/');
 
     return(
@@ -11,7 +25,7 @@ export default async function ActivityComponent() {
             <div className="activities__header">
                 <h2>Recent Activities</h2>
             </div>
-            {messages.map(message => (
+            {messages.map((message: Message) => (
                 <div key={message.id} className="activities__box">
                 <div className="activities__boxHeader roomListRoom__header">
                     <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
@@ -38,7 +52,7 @@ export default async function ActivityComponent() {
                     {/* {% endif %} */}
                 </div>
                 <div className="activities__boxContent">
-                    <p>replied to post in “<Link href="/room">{message.room.name}</Link>”</p>
+                    <p>replied to post in “<Link href={`/room/${message.room.id}`}>{message.room.name}</Link>”</p>
                     <div className="activities__boxRoomContent">
                         {message.body}
                     </div>

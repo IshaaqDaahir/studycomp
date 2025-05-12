@@ -4,18 +4,32 @@ import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
 
-export default async function UserActivityComponent({ currentUserId }) {
+// Types Declaration
+    type CurrentUserId = {
+        currentUserId: number | string; 
+    };
+
+    type Message = {
+        id: string | number;
+        name: string;
+        user: {id: number, avatar: string, username: string};
+        created: string;
+        room: {id: number, name: string};
+        body: string;
+    };
+
+export default async function UserActivityComponent({ currentUserId }: CurrentUserId) {
     const messages = await fetchFromDjango('api/messages/');
 
     // Filter messages by host ID
-    const userMessages = messages.filter(message => message.user.id == currentUserId);
+    const userMessages = messages.filter((message: Message) => message.user.id == currentUserId);
 
     return(
         <div className="activities">
             <div className="activities__header">
                 <h2>Recent Activities</h2>
             </div>
-            {userMessages.map((message) => (
+            {userMessages.map((message: Message) => (
                 <div key={message.id} className="activities__box">
                     <div className="activities__boxHeader roomListRoom__header">
                         <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">

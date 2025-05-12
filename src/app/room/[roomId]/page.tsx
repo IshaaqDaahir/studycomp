@@ -8,8 +8,13 @@ import { formatDistanceToNow } from 'date-fns';
 import RoomConversation from "@/app/room-conversation/page";
 import RoomParticipants from "@/app/room-participants/page";
 
-export default async function Room({ params }) {
-    const { roomId } = await params;
+// Types Declaration
+    type RoomComponentProps = {
+        params: { roomId: number | string };
+    };
+
+export default async function Room({ params }: RoomComponentProps) {
+    const { roomId } = params;
 
     const  room = await fetchFromDjango(`api/rooms/${roomId}/`);
 

@@ -4,12 +4,25 @@ import Link from "next/link";
 import { formatDistanceToNow } from 'date-fns';
 import { fetchFromDjango } from "@/lib/api";
 
-export default async function FeedComponent() {
+// Types Declaration
+    type Room = {
+        id: string | number;
+        host: {id: string | number, avatar: string, username: string};
+        participants: {length: number};
+        topic: {name: string};
+        created: string;
+        name: string;
+    };
+    type TopicsComponentProps = {
+        searchParams: { q?: string }; // `q` is optional (may not exist in URL)
+    };
+
+export default async function FeedComponent({ searchParams }: TopicsComponentProps) {
     const rooms = await fetchFromDjango('api/rooms/');
 
     return(
         <div>
-            {rooms.map((room) => (
+            {rooms.map((room: Room) => (
                 <div key={room.id} className="roomListRoom">
                     <div className="roomListRoom__header">
                         <Link href={`/profile/${room.host.id}/`} className="roomListRoom__author">

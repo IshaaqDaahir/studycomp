@@ -5,13 +5,17 @@ import logo from "../../../public/images/logo.svg";
 import avatar from "../../../public/images/avatar.svg";
 import Form from "next/form";
 import { useRouter } from 'next/navigation';
+import { FormEvent } from 'react';
 
 export default function NavBar(){
     const router = useRouter();
 
-    const handleSearch = (event) => {
+    const handleSearch = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const query = event.target.q.value.trim();
+
+        // Get the form data in a type-safe way
+        const formData = new FormData(event.currentTarget);
+        const query = formData.get('q')?.toString().trim() || '';
         
         if (query) {
         router.push(`/?q=${encodeURIComponent(query)}`);

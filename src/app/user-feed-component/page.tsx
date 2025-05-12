@@ -4,15 +4,29 @@ import Link from "next/link";
 import { formatDistanceToNow } from 'date-fns';
 import { fetchFromDjango } from "@/lib/api";
 
-export default async function UserFeedComponent({ currentUserId }) {
+// Types Declaration
+    type CurrentUserId = {
+        currentUserId: number | string; 
+    };
+
+    type Room = {
+        id: string | number;
+        host: {id: string | number, avatar: string, username: string};
+        participants: {length: number};
+        topic: {name: string};
+        created: string;
+        name: string;
+    };
+
+export default async function UserFeedComponent({ currentUserId }: CurrentUserId) {
     const rooms = await fetchFromDjango('api/rooms/');
     
     // Filter rooms by host ID
-    const userRooms = rooms.filter(room => room.host.id == currentUserId);
+    const userRooms = rooms.filter((room: Room) => room.host.id == currentUserId);
 
     return(
         <div>
-            {userRooms.map((room) => (
+            {userRooms.map((room: Room) => (
                 <div key={room.id} className="roomListRoom">
                     <div className="roomListRoom__header">
                         <Link href={`/profile/${room.host.id}/`} className="roomListRoom__author">
