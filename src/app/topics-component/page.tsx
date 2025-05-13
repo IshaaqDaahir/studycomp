@@ -23,13 +23,13 @@ export default async function TopicsComponent({ searchParams }: TopicsComponentP
 
     // Fetch both topics and rooms
     const [topics, rooms] = await Promise.all([
-        fetchFromDjango('api/topics/'),
+        fetchFromDjango(query ? `api/search/?q=${query}` : 'api/topics/'),
         fetchFromDjango(query ? `api/search/?q=${query}` : 'api/rooms/')
     ]);
 
     // Handle search results or normal data
     const displayRooms = query ? rooms?.rooms || [] : rooms;
-    const displayTopics = query ? rooms?.topics || [] : topics;
+    const displayTopics = query ? topics?.topics || [] : topics;
 
     // Calculate room counts for each topic
     const topicCounts: TopicCounts = {};
@@ -61,7 +61,7 @@ export default async function TopicsComponent({ searchParams }: TopicsComponentP
 
                 {uniqueTopics.map((topic: Topic) => (
                     <li key={topic.id}>
-                        <Link href={`/?q=${topic.name}/`} 
+                        <Link href={`/?q=${topic.name.toLocaleLowerCase()}`} 
                         className={query === topic.name ? 'active' : ''}>{topic.name}<span>{topicCounts[topic.name] || 0}</span></Link>
                     </li>
                 ))}

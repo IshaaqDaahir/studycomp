@@ -7,7 +7,7 @@ import { fetchFromDjango } from "@/lib/api";
 
 // Types Declaration
     type TopicsComponentProps = {
-        searchParams: { q?: string }; // `q` is optional (may not exist in URL)
+        searchParams: { q?: string }; 
     };
 
 export default async function HomePage({ searchParams }: TopicsComponentProps) {
@@ -49,10 +49,10 @@ export default async function HomePage({ searchParams }: TopicsComponentProps) {
                     <div className="roomList__header">
                         <div>
                             <h2>Study Room</h2>
-                            <p>{rooms.length} Rooms available</p>
+                            <p>{query ? `${searchResults?.rooms.length} Rooms available for ${query}` : `${rooms.length} Rooms available`}</p>
                         </div>
 
-                        <Link className="btn btn--main" href="/room-form">
+                        {query ? '' : <Link className="btn btn--main" href="/room-form">
                             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                             <title>add</title>
                             <path
@@ -60,7 +60,7 @@ export default async function HomePage({ searchParams }: TopicsComponentProps) {
                             ></path>
                             </svg>
                             Create Room
-                        </Link>
+                        </Link>}
                     </div>
 
                     {/* Feed Component with search results */}

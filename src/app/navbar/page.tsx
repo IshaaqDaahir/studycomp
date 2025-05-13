@@ -5,6 +5,7 @@ import logo from "../../../public/images/logo.svg";
 import avatar from "../../../public/images/avatar.svg";
 import Form from "next/form";
 import { useRouter } from 'next/navigation';
+
 import { FormEvent } from 'react';
 
 export default function NavBar(){
