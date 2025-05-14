@@ -13,7 +13,8 @@ import { fetchFromDjango } from "@/lib/api";
 export default async function HomePage({ searchParams }: TopicsComponentProps) {
     const rooms = await fetchFromDjango('api/rooms/');
     
-    const query = searchParams.q || '';
+    const passedQuery = await searchParams;
+    const query = passedQuery.q || '';
     const searchResults = query
         ? await fetchFromDjango(`api/search/?q=${query}`)
         : "No room matches your search!";
@@ -24,7 +25,9 @@ export default async function HomePage({ searchParams }: TopicsComponentProps) {
                 <div className="container">
                 
                 {/* Topics Component with search results */}
-                <div><TopicsComponent searchParams={searchParams} /></div>
+                <Suspense fallback={<div>Loading topics...</div>}>
+                    <div><TopicsComponent searchParams={searchParams} /></div>
+                </Suspense>
                     
                 {/* Room List Start */}
                 <div className="roomList">
@@ -64,12 +67,16 @@ export default async function HomePage({ searchParams }: TopicsComponentProps) {
                     </div>
 
                     {/* Feed Component with search results */}
-                    <div><FeedComponent roomsList={searchResults?.rooms} query={query} /></div>
+                    <Suspense fallback={<div>Loading rooms...</div>}>
+                        <div><FeedComponent roomsList={searchResults?.rooms} query={query} /></div>
+                    </Suspense>
                 </div>
                 {/* Room List End */}
 
                 {/* Activity Component with search results */}
-                <div><ActivityComponent messagesList={searchResults?.messages} query={query} /></div>
+                <Suspense fallback={<div>Loading messages...</div>}>
+                    <div><ActivityComponent messagesList={searchResults?.messages} query={query} /></div>
+                </Suspense>
                 </div>
             </main>
         </Suspense>

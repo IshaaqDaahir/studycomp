@@ -19,7 +19,8 @@ import { fetchFromDjango } from "@/lib/api";
     };
 
 export default async function TopicsComponent({ searchParams }: TopicsComponentProps) {
-    const query = searchParams.q;
+    const passedQuery = await searchParams;
+    const query = passedQuery.q;
 
     // Fetch both topics and rooms
     const [topics, rooms] = await Promise.all([

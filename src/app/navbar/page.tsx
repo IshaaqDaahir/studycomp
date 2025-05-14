@@ -4,27 +4,8 @@ import Link from "next/link";
 import logo from "../../../public/images/logo.svg";
 import avatar from "../../../public/images/avatar.svg";
 import Form from "next/form";
-import { useRouter } from 'next/navigation';
-
-import { FormEvent } from 'react';
 
 export default function NavBar(){
-    const router = useRouter();
-
-    const handleSearch = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        // Get the form data in a type-safe way
-        const formData = new FormData(event.currentTarget);
-        const query = formData.get('q')?.toString().trim() || '';
-        
-        if (query) {
-        router.push(`/?q=${encodeURIComponent(query)}`);
-        } else {
-        router.push('/');
-        }
-    };
-
     return(
         <header className="header header--loggedIn">
             <div className="container">
@@ -32,7 +13,7 @@ export default function NavBar(){
                     <Image src={logo} alt="Logo Image" />
                     <h1>StudyCompanion</h1>
                 </Link>
-                <Form className="header__search" action="" onSubmit={handleSearch}>
+                <Form className="header__search" action="">
                     <label>
                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                             <title>search</title>
