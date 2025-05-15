@@ -1,6 +1,21 @@
-import Link from "next/link"
+import Link from "next/link";
+import Form from "next/form";
+import { fetchFromDjango } from "@/lib/api";
 
-export default function RoomForm() {
+// Types Declaration
+type Topic = {
+    id: string | number;
+    name: string    
+}
+
+export default async function RoomForm() {
+    const topics = await fetchFromDjango('api/topics/');
+
+    async function createRoom(){
+        "use server"
+        await fetchFromDjango('api/rooms/');
+    }
+
     return(
         <main className="create-room layout">
             <div className="container">
@@ -15,40 +30,38 @@ export default function RoomForm() {
                                 </path>
                             </svg>
                         </Link>
-                        <h3>Create/Update Study Room</h3>
+                        <h3>Create / Update Study Room</h3>
                     </div>
                     </div>
                     <div className="layout__body">
-                    <form className="form" action="" method="POST">
-                        {/* {% csrf_token %} */}
-
+                    <Form className="form" formMethod="POST" action={createRoom}>
                         <div className="form__group">
                             <label>Enter a Topic</label>
-                            <input type="text" value="{{room.topic.name}}" name="topic" required list="topic-list" />
+                            <input type="text" name="topic" placeholder="Select a topic..." required list="topic-list" />
                             <datalist id="topic-list">
-                            <select id="room_topic">
-                                {/* {% for topic in topics %} */}
-                                    <option value="TopicName">Topic Name</option>
-                                {/* {% endfor %} */}
-                            </select>
+                                <select id="room_topic">
+                                    {topics.map((topic: Topic) => (
+                                        <option key={topic.id}>{topic.name}</option>
+                                    ))}
+                                </select>
                             </datalist>
                         </div>
-
+                                        
                         <div className="form__group">
                             <label>Room Name</label>
-                            Name
+                            <input type="text" name="name" placeholder="Enter room name..." required />
                         </div>
 
                         <div className="form__group">
                             <label>Room Description</label>
-                            Form Description
+                            <input type="text" name="description" placeholder="Enter room description..." required/>
                         </div>
 
                         <div className="form__action">
-                        <Link className="btn btn--dark cancel-btn" href="/">Cancel</Link>
+                            <Link className="btn btn--dark cancel-btn" href="/">Cancel</Link>
                             <button className="btn btn--main" type="submit">Submit</button>
                         </div>
-                    </form>
+                    </Form>
                     </div>
                 </div>
             </div>
