@@ -55,7 +55,7 @@ export default async function HomePage({ searchParams }: TopicsComponentProps) {
                             <p>{query ? `${searchResults?.rooms.length} Rooms available for ${query}` : `${rooms.length} Rooms available`}</p>
                         </div>
 
-                        {query ? '' : <Link className="btn btn--main" href="/room-form">
+                        {query ? '' : <Link className="btn btn--main" href="/create-room">
                             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                             <title>add</title>
                             <path
