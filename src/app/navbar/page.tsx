@@ -4,6 +4,7 @@ import Link from "next/link";
 import logo from "../../../public/images/logo.svg";
 import avatar from "../../../public/images/avatar.svg";
 import Form from "next/form";
+import ProtectedRoute from "../components/protected-route/page";
 
 export default function NavBar(){
     return(
@@ -27,20 +28,22 @@ export default function NavBar(){
                 <nav className="header__menu">
                     
                     {/*  Logged In  */}
-                    <div className="header__user">
-                        <Link href="/profile">
-                            <div className="avatar avatar--medium active">
-                            <Image src={avatar} alt="User Avatar" />
-                            </div>
-                            <p>request.user.username <span>@request.user.username</span></p>
-                        </Link>
-                        <button className="dropdown-button">
-                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                            <title>chevron-down</title>
-                            <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
-                            </svg>
-                        </button>
-                    </div>
+                    {/* <ProtectedRoute> */}
+                        <div className="header__user">
+                            <Link href="/profile">
+                                <div className="avatar avatar--medium active">
+                                <Image src={avatar} alt="User Avatar" />
+                                </div>
+                                <p>request.user.username <span>@request.user.username</span></p>
+                            </Link>
+                            <button className="dropdown-button">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                                <title>chevron-down</title>
+                                <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    {/* </ProtectedRoute> */}
 
                     {/* Not Logged In */}
                     <Link href="/login">

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { fetchFromDjango } from "@/lib/api";
 
 
@@ -10,6 +11,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,23 +21,19 @@ export default function Login() {
     try {
       const data = await fetchFromDjango("api/login/", {
         method: "POST",
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
-
-      if (!data.ok) {
-        throw new Error(data.error || "Login failed");
-      }
 
       // Store tokens and user data
       localStorage.setItem("access_token", data.access);
       localStorage.setItem("refresh_token", data.refresh);
       localStorage.setItem("user", JSON.stringify(data.user));
 
+      // Force a refresh of the authentication state
+      window.dispatchEvent(new Event("storage"));
+
       // Redirect to home page or previous page
-      window.location.href = "/";
+      router.push("/");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An unknown error occurred");
       setIsLoading(false);

@@ -7,12 +7,14 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
       'Content-Type': 'application/json',
       ...options.headers,
     },
+    credentials: 'include', // Important for session cookies
   });
 
+  const data = await response.json().catch(() => ({}));
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || 'Request failed');
+    throw new Error(data.error || 'Request failed');
   }
 
-  return response.json();
+  return data;
 }

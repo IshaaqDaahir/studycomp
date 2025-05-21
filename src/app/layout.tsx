@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../../public/styles/main.css"
 import "../../public/styles/style.css"
+import { AuthProvider } from "@/context/auth";
 
 export const metadata: Metadata = {
   title: "StudyCompanion  | Find study companions around the world!",
@@ -14,10 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        {children}
-        <script src="/js/script.js"></script>
-      </body>
+        <body>
+            <AuthProvider>
+                {children}
+            </AuthProvider>
+            <script src="/js/script.js"></script>
+        </body>
     </html>
   );
 }

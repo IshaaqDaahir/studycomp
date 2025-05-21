@@ -1,4 +1,4 @@
-import RoomForm from "../components/page";
+import RoomForm from "../components/room-form/page";
 import { fetchFromDjango } from "@/lib/api";
 
 export default async function CreateRoomPage() {
