@@ -18,3 +18,25 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
 
   return data;
 }
+
+export async function logoutFromDjango() {
+  try {
+    const response = await fetch(`${API_URL}api/logout/`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Logout failed');
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Logout error:', error);
+    return false;
+  }
+}

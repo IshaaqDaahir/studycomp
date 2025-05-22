@@ -42,14 +42,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         Login();
     };
 
-    const logout = () => {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        localStorage.removeItem("user");
+    const logout = async () => {
+    try {
+        // Clear client-side storage
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user');
+        
+        // Clear auth state
         setUser(null);
-
-        // Notify other tabs
-        window.dispatchEvent(new Event("storage"));
+        
+        // Notify other tabs/windows
+        window.dispatchEvent(new Event('storage'));
+    } catch (error) {
+        console.error('Logout error:', error);
+    }
     };
 
     // Provider setup

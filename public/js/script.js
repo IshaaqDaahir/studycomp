@@ -42,16 +42,17 @@ if (actionButtons) {
   });
 }
 
-// Menu
 
+// Menu
 const dropdownMenu = document.querySelector(".dropdown-menu");
 const dropdownButton = document.querySelector(".dropdown-button");
 
 if (dropdownButton) {
   dropdownButton.addEventListener("click", () => {
-    dropdownMenu.classList.toggle("show");
+    dropdownMenu.classList.toggle('show');
   });
 }
+
 
 // Upload Image
 const photoInput = document.querySelector("#avatar");
