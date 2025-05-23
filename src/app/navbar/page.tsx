@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useRef, useEffect } from "react";
 import Form from "next/form";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,16 +13,32 @@ import { logoutFromDjango } from "@/lib/api";
 export default function NavBar(){
     const { user, isAuthenticated, logout, loading } = useAuth();
     const router = useRouter();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const handleLogout = async () => {
-    try {
-      await logoutFromDjango();
-      logout();
-      router.push('/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
+        try {
+        await logoutFromDjango();
+        logout();
+        router.push('/login');
+        } catch (error) {
+        console.error('Logout error:', error);
+        }
     };
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return(
         <header className="header header--loggedIn">
@@ -44,7 +61,7 @@ export default function NavBar(){
 
                 <nav className="header__menu">
                     {isAuthenticated && (
-                        <div>
+                        <div ref={dropdownRef}>
                             <div className="header__user">
                                 <Link href="/profile">
                                     <div className="avatar avatar--medium active">
@@ -52,7 +69,8 @@ export default function NavBar(){
                                     </div>
                                     <p>{user?.username} <span>@{user?.username}</span></p>
                                 </Link>
-                                <button className="dropdown-button">
+                                <button className="dropdown-button" onClick={()=> setIsDropdownOpen(!isDropdownOpen)}
+                                    aria-expanded={isDropdownOpen}>
                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                         <title>chevron-down</title>
                                         <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
@@ -60,7 +78,7 @@ export default function NavBar(){
                                 </button>
                             </div>
 
-                            <div className="dropdown-menu">
+                            <div className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}>
                                 <Link href="/update-user" className="dropdown-link"
                                     ><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                     <title>tools</title>
