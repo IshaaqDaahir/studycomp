@@ -13,7 +13,7 @@ type ProfileComponentProps = {
     };
 
 export default async function Profile({ params }: ProfileComponentProps) {
-    const {userId} = params;
+    const {userId} = await params;
 
     const user = await fetchFromDjango(`api/users/${userId}/`);
 
