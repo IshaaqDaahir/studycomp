@@ -63,7 +63,7 @@ export default function NavBar(){
                     {isAuthenticated && (
                         <div ref={dropdownRef}>
                             <div className="header__user">
-                                <Link href="/profile">
+                                <Link href={`/profile/${user?.id}`}>
                                     <div className="avatar avatar--medium active">
                                         <Image src={user?.avatar || avatar} alt="User Avatar" width={32} height={32} />
                                     </div>
