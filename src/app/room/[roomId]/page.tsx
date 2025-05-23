@@ -19,7 +19,7 @@ export default async function Room({ params }: RoomComponentProps) {
     const  room = await fetchFromDjango(`api/rooms/${roomId}/`);
 
     return (
-        <Suspense fallback={<div>Loading profile...</div>}>
+        <Suspense fallback={<div>Loading room...</div>}>
             <div>
                 <div><NavBar /></div>
                 <main className="profile-page layout layout--2">
@@ -42,7 +42,7 @@ export default async function Room({ params }: RoomComponentProps) {
 
                                 {/* {% if room.host == request.user %} */}
                                     <div className="room__topRight">
-                                        <Link href="/room-form">
+                                        <Link href="/create-room">
                                             <svg
                                             enable-background="new 0 0 24 24"
                                             height="32"
