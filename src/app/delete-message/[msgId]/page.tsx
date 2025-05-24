@@ -1,6 +1,25 @@
+import { fetchFromDjango } from "@/lib/api";
 import Link from "next/link";
 
-export default function Delete({msgId}: {msgId: string | number}) {
+// Types Declaration
+    type Message = {
+        id: string | number;
+        name: string;
+        user: {id: number, avatar: string, username: string};
+        created: string;
+        room: {name: string, id: number};
+        body: string;
+    };
+
+    type ProfileComponentProps = {
+        params: { msgId: string | number }; 
+    };
+
+export default async function Delete({ params }: ProfileComponentProps) {
+    const {msgId} = await params;
+    
+    const message = await fetchFromDjango(`api/messages/${msgId}/`);
+
     return (
         <main className="delete-item layout">
             <div className="container">
@@ -23,7 +42,7 @@ export default function Delete({msgId}: {msgId: string | number}) {
                         <form className="form" action="">
 
                             <div className="form__group">
-                                <p>Are you sure you want to delete "MessageName"?</p>
+                                <p>Are you sure you want to delete "{message.body}" ?</p>
                             </div>
 
                             <div className="for__group">
