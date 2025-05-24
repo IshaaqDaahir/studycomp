@@ -1,5 +1,9 @@
+"use client"
+
 import { fetchFromDjango } from "@/lib/api";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 // Types Declaration
     type Message = {
@@ -15,10 +19,55 @@ import Link from "next/link";
         params: { msgId: string | number }; 
     };
 
-export default async function Delete({ params }: ProfileComponentProps) {
-    const {msgId} = await params;
+export default function Delete({ params }: ProfileComponentProps) {
+    const {msgId} = params;
+    const [message, setMessage] = useState<Message | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
     
-    const message = await fetchFromDjango(`api/messages/${msgId}/`);
+    // Fetch message on component mount
+    useEffect(() => {
+        const fetchMessage = async () => {
+            try {
+                const data = await fetchFromDjango(`api/messages/${msgId}/`);
+                setMessage(data);
+            } catch (err) {
+                setError('Failed to load message');
+                console.error(err);
+            }
+        };
+        fetchMessage();
+    }, [msgId]);
+
+    const handleDelete = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsDeleting(true);
+        setError(null);
+
+        try {
+            const response = await fetchFromDjango(`api/messages/${msgId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response) {
+                throw new Error('Message deleted successfully!');
+            }
+
+            // Redirect to the home page after successful deletion
+            router.push("/home");
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to delete message');
+            setIsDeleting(false);
+        }
+    };
+
+    if (!message) {
+        return <div className="delete-item layout">Loading...</div>;
+    }
 
     return (
         <main className="delete-item layout">
@@ -39,15 +88,22 @@ export default async function Delete({ params }: ProfileComponentProps) {
                         </div>
                     </div>
                     <div className="layout__body">
-                        <form className="form" action="">
+                        <form className="form" onSubmit={handleDelete}>
 
-                            <div className="form__group">
-                                <p>Are you sure you want to delete "{message.body}" ?</p>
-                            </div>
+                            {!error && 
+                            <div>
+                                <div className="form__group">
+                                    <p>Are you sure you want to delete "{message.body}"?</p>
+                                </div>
 
-                            <div className="for__group">
-                                <input className="btn btn--main" type="submit" value="Confirm" />
-                            </div>
+                                <div className="form__group">
+                                    <button className="btn btn--main" type="submit" disabled={isDeleting}>
+                                        {isDeleting ? 'Deleting...' : 'Confirm'}
+                                    </button>
+                                </div>
+                            </div>}
+
+                            {error && <p className="error-message">{error}</p>}
                         </form>
                     </div>
                 </div>

@@ -808,6 +808,12 @@ a {
 =>  Delete Item
 ================================*/
 
+.error-message {
+  text-align: center;
+  color: rgb(237, 237, 171);
+  font-size: 3rem;
+}
+
 .delete-item.layout .layout__box {
   max-width: 68rem;
 }

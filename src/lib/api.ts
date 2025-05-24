@@ -10,6 +10,11 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
     credentials: 'include', // Important for session cookies
   });
 
+  // For DELETE requests that return 204 No Content
+    if (response.status === 204) {
+        return null;
+    }
+
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
