@@ -1,5 +1,4 @@
 import Image from "next/image";
-import avatar from "../../../../public/images/avatar.svg";
 import Link from "next/link";
 import NavBar from "../../navbar/page";
 import { fetchFromDjango } from '@/lib/api';
@@ -14,7 +13,7 @@ import RoomParticipants from "@/app/room-participants/page";
     };
 
 export default async function Room({ params }: RoomComponentProps) {
-    const { roomId } = params;
+    const { roomId } = await params;
 
     const  room = await fetchFromDjango(`api/rooms/${roomId}/`);
 
@@ -40,7 +39,6 @@ export default async function Room({ params }: RoomComponentProps) {
                                     <h3>Study Room</h3>
                                 </div>
 
-                                {/* {% if room.host == request.user %} */}
                                     <div className="room__topRight">
                                         <Link href="/create-room">
                                             <svg
@@ -68,7 +66,7 @@ export default async function Room({ params }: RoomComponentProps) {
                                             </g>
                                             </svg>
                                         </Link>
-                                        <Link href="/delete">
+                                        <Link href={`/delete-room/${room.id}`}>
                                             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                             <title>remove</title>
                                             <path
@@ -77,7 +75,6 @@ export default async function Room({ params }: RoomComponentProps) {
                                             </svg>
                                         </Link>
                                     </div>
-                                {/* {% endif %} */}
                             </div>
                             <div className="room__box scroll">
                                 <div className="room__header scroll">
