@@ -40,7 +40,7 @@ export default async function RoomConversation({ currentRoomId }: CurrentRoomId)
                             </div>
 
                             {/* {% if request.user == message.user %} */}
-                            <Link href="/delete">
+                            <Link href={`/delete-message/${message.id}`}>
                                 <div className="thread__delete">
                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                         <title>remove</title>
