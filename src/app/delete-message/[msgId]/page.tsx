@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Delete() {
+export default function Delete({msgId}: {msgId: string | number}) {
     return (
         <main className="delete-item layout">
             <div className="container">
@@ -20,8 +20,7 @@ export default function Delete() {
                         </div>
                     </div>
                     <div className="layout__body">
-                        <form className="form" action="" method="POST">
-                            {/* {% csrf_token %} */}
+                        <form className="form" action="">
 
                             <div className="form__group">
                                 <p>Are you sure you want to delete "MessageName"?</p>
