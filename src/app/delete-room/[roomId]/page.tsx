@@ -24,7 +24,7 @@ export default function Delete() {
                             {/* {% csrf_token %} */}
 
                             <div className="form__group">
-                                <p>Are you sure you want to delete "MessageName"?</p>
+                                <p>Are you sure you want to delete "Room Name"?</p>
                             </div>
 
                             <div className="for__group">
