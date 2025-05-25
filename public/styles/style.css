@@ -426,8 +426,9 @@ a {
   max-width: 48rem;
   min-height: 40rem;
   position: absolute;
-  top: 50%;
+  top: 70.5%;
   left: 50%;
+  right: 50%;
   transform: translate(-50%, -46%);
   background-color: var(--color-dark);
   border-radius: 1rem;
@@ -1168,4 +1169,24 @@ a {
   font-weight: 500;
   color: var(--color-main);
   font-weight: 1.4rem;
+}
+
+
+/*==============================
+=>  Custom Styles
+================================*/
+
+.login__layout__box {
+    width: 90%;
+    max-width: 48rem;
+    min-height: 40rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, -46%);
+    background-color: var(--color-dark);
+    border-radius: 1rem;
+    box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
