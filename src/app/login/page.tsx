@@ -43,7 +43,7 @@ export default function Login() {
   return (
     <main className="auth layout">
       <div className="container">
-        <div className="layout__box">
+        <div className="login__layout__box">
           <div className="layout__boxHeader">
             <div className="layout__boxTitle">
               <h3>Login</h3>
@@ -73,7 +73,7 @@ export default function Login() {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="••••••••••••••••"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
