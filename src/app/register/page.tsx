@@ -60,7 +60,7 @@ export default function Register() {
     return (
         <main className="auth layout">
             <div className="container">
-                <div className="layout__box">
+                <div className="register__layout__box">
                     <div className="layout__boxHeader">
                         <div className="layout__boxTitle">
                             <h3>Register</h3>
