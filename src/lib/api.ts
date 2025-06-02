@@ -25,23 +25,28 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
 }
 
 export async function logoutFromDjango() {
-  try {
-    const response = await fetch(`${API_URL}api/logout/`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-      },
-    });
+    try {
+        const response = await fetch(`${API_URL}api/logout/`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+        });
 
-    if (!response.ok) {
-      throw new Error('Logout failed');
+        if (!response.ok) {
+        throw new Error('Logout failed');
+        }
+
+        // Also remove the token from localStorage
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token'); // if you store it
+
+        return true;
+
+    } catch (error) {
+        console.error('Logout error:', error);
+        return false;
     }
-
-    return true;
-  } catch (error) {
-    console.error('Logout error:', error);
-    return false;
-  }
 }
