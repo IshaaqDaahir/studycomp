@@ -18,28 +18,34 @@ export default function RoomForm({ topics }: {topics: Topic[]}) {
         event.preventDefault();
         
         const formData = new FormData(event.currentTarget);
+        const topic = formData.get("room-topic")?.toString().trim();
+        
+        // Validate topic
+        if (!topic) {
+            alert("Please select a topic");
+            return;
+        }
+
         const roomData = {
             name: formData.get("room-name"),
             description: formData.get("room-description"),
-            topic: formData.get("room-topic"),
+            topic: topic,  // Use trimmed topic
         };
 
         try {
-            const response = await fetchFromDjango('api/rooms/', {
+            const response = await fetchFromDjango('api/rooms/create/', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify(roomData),
             });
 
             if (response.ok) {
-                return router.push("/");
+                router.push(`/room/${response.id}/`);
             } else {
-                return 'Failed to create room';
+                const errorData = await response.json();
+                alert(`Failed: ${errorData.error || response.statusText}`);
             }
         } catch (error) {
-            return 'Error creating room:' + error;
+            alert(error);
         }
     }
 
@@ -81,7 +87,7 @@ export default function RoomForm({ topics }: {topics: Topic[]}) {
 
                             <div className="form__group">
                                 <label>Room Description</label>
-                                <input type="text" name="room-description" placeholder="Enter room description..." required/>
+                                <textarea name="room-description" placeholder="Enter room description..." required/>
                             </div>
 
                             <div className="form__action">
