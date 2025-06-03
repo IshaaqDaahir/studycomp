@@ -33,19 +33,30 @@ export default function RoomForm({ topics }: {topics: Topic[]}) {
         };
 
         try {
+            // Get JWT token from storage
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                alert('You need to log in first');
+                return;
+            }
+
             const response = await fetchFromDjango('api/rooms/create/', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`  // Add JWT token
+                },
                 body: JSON.stringify(roomData),
             });
 
-            if (response.ok) {
+            // Check for successful response (2xx status)
+            if (response) {
                 router.push(`/room/${response.id}/`);
             } else {
-                const errorData = await response.json();
-                alert(`Failed: ${errorData.error || response.statusText}`);
+                alert('Room created but no content returned');
             }
-        } catch (error) {
-            alert(error);
+        } catch (error: any) {
+            alert(`Failed to create room: ${error.message}`);
         }
     }
 
@@ -87,7 +98,7 @@ export default function RoomForm({ topics }: {topics: Topic[]}) {
 
                             <div className="form__group">
                                 <label>Room Description</label>
-                                <textarea name="room-description" placeholder="Enter room description..." required/>
+                                <textarea name="room-description" placeholder="Enter room description..."/>
                             </div>
 
                             <div className="form__action">

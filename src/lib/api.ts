@@ -1,27 +1,35 @@
 const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
 
+// src/lib/api.ts
 export async function fetchFromDjango(endpoint: string, options: RequestInit = {}) {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    credentials: 'include', // Important for session cookies
-  });
+    try {
+        const response = await fetch(`${API_URL}${endpoint}`, {
+        ...options,
+        headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+        },
+        credentials: 'include',
+        });
 
-  // For DELETE requests that return 204 No Content
-    if (response.status === 204) {
+        if (response.status === 204) {
         return null;
+        }
+
+        const text = await response.text();
+        const data = text ? JSON.parse(text) : {};
+
+        if (!response.ok) {
+        // Use server error message if available
+        const errorMessage = data.error || data.detail || 'Request failed';
+        throw new Error(`${errorMessage} (${response.status})`);
+        }
+
+        return data;
+    } catch (error: any) {
+        // Wrap network errors
+        throw new Error(error.message || 'Network request failed');
     }
-
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(data.error || 'Request failed');
-  }
-
-  return data;
 }
 
 export async function logoutFromDjango() {
@@ -38,10 +46,6 @@ export async function logoutFromDjango() {
         if (!response.ok) {
         throw new Error('Logout failed');
         }
-
-        // Also remove the token from localStorage
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token'); // if you store it
 
         return true;
 
