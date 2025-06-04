@@ -21,12 +21,9 @@ export default function Delete() {
                     </div>
                     <div className="layout__body">
                         <form className="form" action="" method="POST">
-                            {/* {% csrf_token %} */}
-
                             <div className="form__group">
                                 <p>Are you sure you want to delete "Room Name"?</p>
                             </div>
-
                             <div className="for__group">
                                 <input className="btn btn--main" type="submit" value="Confirm" />
                             </div>
