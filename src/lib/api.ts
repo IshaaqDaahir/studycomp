@@ -43,24 +43,12 @@ export async function logoutFromDjango() {
       },
     });
 
-<<<<<<< HEAD
-        if (!response.ok) {
-        throw new Error('Logout failed');
-        }
-
-        return true;
-
-    } catch (error) {
-        console.error('Logout error:', error);
-        return false;
-=======
     if (!response.ok) {
       throw new Error('Logout failed');
->>>>>>> parent of 0db53cd (Remove token on logout)
     }
 
     return true;
-  } catch (error) {
+  } catch (error:any) {
     console.error('Logout error:', error);
     return false;
   }
