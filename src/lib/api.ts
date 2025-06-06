@@ -13,16 +13,16 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
         });
 
         if (response.status === 204) {
-        return null;
+            return null;
         }
 
         const text = await response.text();
         const data = text ? JSON.parse(text) : {};
 
         if (!response.ok) {
-        // Use server error message if available
-        const errorMessage = data.error || data.detail || 'Request failed';
-        throw new Error(`${errorMessage} (${response.status})`);
+            // Use server error message if available
+            const errorMessage = data.error || data.detail || 'Request failed';
+            throw new Error(`${errorMessage} (${response.status})`);
         }
 
         return data;
