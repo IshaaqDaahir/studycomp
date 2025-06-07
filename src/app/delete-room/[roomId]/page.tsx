@@ -1,6 +1,57 @@
-import Link from "next/link";
+"use client"
 
-export default function Delete() {
+import Link from "next/link";
+import { useRouter, useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { fetchFromDjango } from "@/lib/api";
+
+export default function DeleteRoomPage() {
+    const router = useRouter();
+    const { roomId } = useParams();
+    const [roomName, setRoomName] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    // Fetch room details on mount
+    useEffect(() => {
+        const fetchRoom = async () => {
+            try {
+                const roomData = await fetchFromDjango(`api/rooms/${roomId}/`);
+                setRoomName(roomData.name);
+                setLoading(false);
+            } catch (error) {
+                console.error("Failed to fetch room:", error);
+                setLoading(false);
+            }
+        };
+
+        fetchRoom();
+    }, [roomId]);
+
+    const handleDelete = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        try {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                alert('You need to log in first');
+                return;
+            }
+
+            await fetchFromDjango(`api/rooms/${roomId}/delete/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            router.push("/");
+        } catch (error: any) {
+            alert(`Failed to delete room: ${error.message}`);
+        }
+    };
+
+    if (loading) return <div>Loading...</div>;
+
     return (
         <main className="delete-item layout">
             <div className="container">
@@ -20,12 +71,12 @@ export default function Delete() {
                         </div>
                     </div>
                     <div className="layout__body">
-                        <form className="form" action="" method="POST">
+                        <form className="form" onSubmit={handleDelete}>
                             <div className="form__group">
-                                <p>Are you sure you want to delete "Room Name"?</p>
+                                <p>Are you sure you want to delete "{roomName}"?</p>
                             </div>
                             <div className="for__group">
-                                <input className="btn btn--main" type="submit" value="Confirm" />
+                                <button className="btn btn--main" type="submit">Confirm</button>
                             </div>
                         </form>
                     </div>
