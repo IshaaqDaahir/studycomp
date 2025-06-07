@@ -40,7 +40,7 @@ export default async function Room({ params }: RoomComponentProps) {
                                 </div>
 
                                     <div className="room__topRight">
-                                        <Link href="/create-room">
+                                        <Link href={`/edit-room/${room.id}/`}>
                                             <svg
                                             enable-background="new 0 0 24 24"
                                             height="32"
