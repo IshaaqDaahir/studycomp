@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {useRouter } from "next/navigation";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { fetchFromDjango } from "@/lib/api";
 
 // Types Declaration
@@ -11,11 +11,32 @@ type Topic = {
     name: string    
 }
 
-export default function RoomForm({ topics }: {topics: Topic[]}) {
+type RoomFormProps = {
+    topics: Topic[];
+    room?: {
+        id: number;
+        name: string;
+        description: string;
+        topic: Topic;
+    };
+}
+
+export default function RoomForm({ topics, room }: RoomFormProps) {
     const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Initialize form with room data if editing
+    useEffect(() => {
+        if (room) {
+            (document.querySelector('input[name="room-name"]') as HTMLInputElement).value = room.name;
+            (document.querySelector('textarea[name="room-description"]') as HTMLTextAreaElement).value = room.description || '';
+            (document.querySelector('input[name="room-topic"]') as HTMLInputElement).value = room.topic.name;
+        }
+    }, [room]);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        setIsSubmitting(true);
         
         const formData = new FormData(event.currentTarget);
         const topic = formData.get("room-topic")?.toString().trim();
@@ -23,6 +44,7 @@ export default function RoomForm({ topics }: {topics: Topic[]}) {
         // Validate topic
         if (!topic) {
             alert("Please select a topic");
+            setIsSubmitting(false);
             return;
         }
 
@@ -37,26 +59,42 @@ export default function RoomForm({ topics }: {topics: Topic[]}) {
             const token = localStorage.getItem('access_token');
             if (!token) {
                 alert('You need to log in first');
+                setIsSubmitting(false);
                 return;
             }
 
-            const response = await fetchFromDjango('api/rooms/create/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`  // Add JWT token
-                },
-                body: JSON.stringify(roomData),
-            });
+            let response;
+            if (room) {
+                // Update existing room
+                response = await fetchFromDjango(`api/rooms/${room.id}/update/`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(roomData),
+                });
+            } else {
+                // Create new room
+                response = await fetchFromDjango('api/rooms/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(roomData),
+                });
+            }
 
             // Check for successful response (2xx status)
             if (response) {
-                router.push(`/room/${response.id}/`);
-            } else {
-                alert('Room created but no content returned');
-            }
+                router.push(room ? `/room/${room.id}/` : `/room/${response.id}/`);
+                router.refresh();
+            } 
         } catch (error: any) {
-            alert(`Failed to create room: ${error.message}`);
+            alert(`Failed to ${room ? 'update' : 'create'} room: ${error.message}`);
+        } finally {
+            setIsSubmitting(false);
         }
     }
 
@@ -74,14 +112,14 @@ export default function RoomForm({ topics }: {topics: Topic[]}) {
                                 </path>
                             </svg>
                         </Link>
-                        <h3>Create / Update Study Room</h3>
+                        <h3>{room ? 'Update' : 'Create'} Study Room</h3>
                     </div>
                     </div>
                     <div className="layout__body">
-                        <form className="form" action='' onSubmit={handleSubmit}>
+                        <form className="form" onSubmit={handleSubmit}>
                             <div className="form__group">
                                 <label>Enter a Topic</label>
-                                <input type="text" name="room-topic" placeholder="Select a topic..." required list="topic-list" />
+                                <input type="text" name="room-topic" placeholder="Select a topic..." required list="topic-list" defaultValue={room?.topic.name || ''} />
                                 <datalist id="topic-list">
                                     <select id="room_topic">
                                         {topics.map((topic: Topic) => (
@@ -93,17 +131,17 @@ export default function RoomForm({ topics }: {topics: Topic[]}) {
                                             
                             <div className="form__group">
                                 <label>Room Name</label>
-                                <input type="text" name="room-name" placeholder="Enter room name..." required />
+                                <input type="text" name="room-name" placeholder="Enter room name..." required defaultValue={room?.name || ''} />
                             </div>
 
                             <div className="form__group">
                                 <label>Room Description</label>
-                                <textarea name="room-description" placeholder="Enter room description..."/>
+                                <textarea name="room-description" placeholder="Enter room description..." defaultValue={room?.description || ''} />
                             </div>
 
                             <div className="form__action">
-                                <Link className="btn btn--dark cancel-btn" href="/">Cancel</Link>
-                                <button className="btn btn--main" type="submit">Submit</button>
+                                <Link className="btn btn--dark cancel-btn" href={room ? `/room/${room.id}/` : '/'}>Cancel</Link>
+                                <button className="btn btn--main" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Processing...' : 'Submit'}</button>
                             </div>
                         </form>
                     </div>
