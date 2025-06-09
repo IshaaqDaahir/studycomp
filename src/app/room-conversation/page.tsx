@@ -39,7 +39,6 @@ export default async function RoomConversation({ currentRoomId }: CurrentRoomId)
                                 <span className="thread__date">{formatDistanceToNow(new Date(message.created))} ago</span>
                             </div>
 
-                            {/* {% if request.user == message.user %} */}
                             <Link href={`/delete-message/${message.id}`}>
                                 <div className="thread__delete">
                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -50,15 +49,12 @@ export default async function RoomConversation({ currentRoomId }: CurrentRoomId)
                                     </svg>
                                 </div>
                             </Link>
-                            {/* {% endif %} */}
                         </div>
                         <div className="thread__details">
                             {message.body}
                         </div>
                     </div>
                 ))}
-            {/* {% endfor %} */}
-
             </div>
         </div>
     );
