@@ -1,7 +1,6 @@
 import TopicsComponent from "@/app/topics/page";
 import Image from "next/image";
 import UserFeedComponent from "@/app/user-feed/page";
-import ActivityComponent from "@/app/activity/page";
 import Link from "next/link";
 import NavBar from "../../navbar/page";
 import { Suspense } from 'react';
