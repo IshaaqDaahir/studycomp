@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import RoomConversation from "@/app/room-conversation/page";
 import RoomParticipants from "@/app/room-participants/page";
+import MessageForm from "@/app/components/message-form/page";
 
 // Types Declaration
     type RoomComponentProps = {
@@ -14,7 +15,6 @@ import RoomParticipants from "@/app/room-participants/page";
 
 export default async function Room({ params }: RoomComponentProps) {
     const { roomId } = await params;
-
     const  room = await fetchFromDjango(`api/rooms/${roomId}/`);
 
     return (
@@ -99,11 +99,8 @@ export default async function Room({ params }: RoomComponentProps) {
 
                                 <RoomConversation currentRoomId={room.id} />
                             </div>
-                            <div className="room__message">
-                                <form action="" method="POST">
-                                    <input name="body" placeholder="Write your message here..." />
-                                </form>
-                            </div>
+                            
+                            <MessageForm roomId={room.id} />
                         </div>
                         {/* Room End */}
 
