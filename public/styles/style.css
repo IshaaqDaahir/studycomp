@@ -1205,6 +1205,21 @@ a {
   overflow: hidden;
 }
 
+.update_account__layout__box {
+  width: 90%;
+  max-width: 48rem;
+  min-height: 40rem;
+  position: absolute;
+  top: 65.9%;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%, -46%);
+  background-color: var(--color-dark);
+  border-radius: 1rem;
+  box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
 .error-message {
     color: var(--color-error);
     margin-top: 0.5rem;
