@@ -35,7 +35,7 @@ export default function Login() {
       // Redirect to home page or previous page
       router.push("/");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred");
+      setError(err instanceof Error ? "Incorrect Email or Password!" : "An unknown error occurred");
       setIsLoading(false);
     }
   };
