@@ -18,9 +18,9 @@ export default function NavBar(){
 
     const handleLogout = async () => {
         try {
-        await logoutFromDjango();
-        logout();
-        router.push('/login');
+            await logoutFromDjango();
+            logout();
+            router.push('/login');
         } catch (error) {
         console.error('Logout error:', error);
         }
