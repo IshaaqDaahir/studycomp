@@ -5,14 +5,16 @@ import NavBar from "../navbar/page";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { fetchFromDjango } from "@/lib/api";
+import { useAuth } from "@/context/auth";
 
 export default function UpdateUser() {
     const router = useRouter();
+    const { user: currentUser, updateUser } = useAuth(); // Get updateUser from context
     const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        username: "",
-        bio: "",
+        name: currentUser?.name || "",
+        email: currentUser?.email || "",
+        username: currentUser?.username || "",
+        bio: currentUser?.bio || "",
         avatar: ""
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,6 +50,9 @@ export default function UpdateUser() {
                 },
                 body: JSON.stringify(payload)
             });
+
+            // Update user in context and local storage
+            updateUser(response);
 
             router.push(`/profile/${response.id}/`);
         } catch (err: any) {

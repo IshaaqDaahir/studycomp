@@ -1,21 +1,37 @@
-"use client"
+'use client';
 
-import Login from "@/app/login/page";
 import { createContext, useContext, useEffect, useState } from "react";
 
-type AuthContextType = {
-  user: any;                // User object (null if not logged in)
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  name: string;
+  bio: string;
+  avatar: string;
+}
+
+interface AuthContextType {
+  user: User | null;                // User object (null if not logged in)
   isAuthenticated: boolean; // Derived from `user` (true if user exists)
   loading: boolean;         // True while checking auth state
-  login: () => Promise<void>;    // Login function
+  login: (userData: User) => void;    // Login function
   logout: () => void;       // Logout function
+  updateUser: (userData: Partial<User>) => void;
 };
 
-const AuthContext = createContext<AuthContextType>(null!);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  loading: true,
+  login: () => {},
+  logout: () => {},
+  updateUser: () => {} // Add this
+});
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     // State management
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     // Effects
@@ -38,25 +54,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     // Methods
-    const login = async () => {
-        Login();
+    const login = (userData: User) => {
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
     };
 
-    const logout = async () => {
-    try {
-        // Clear client-side storage
+    const logout = () => {
+        setUser(null);
+        localStorage.removeItem('user');
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        
-        // Clear auth state
-        setUser(null);
-        
-        // Notify other tabs/windows
-        window.dispatchEvent(new Event('storage'));
-    } catch (error) {
-        console.error('Logout error:', error);
-    }
+    };
+
+    const updateUser = (userData: Partial<User>) => {
+        if (!user) return;
+    
+        const updatedUser = { ...user, ...userData };
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
     };
 
     // Provider setup
@@ -68,6 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             loading,
             login,
             logout,
+            updateUser
         }}
         >
         {children}
