@@ -30,7 +30,7 @@ export default async function Room({ params }: RoomComponentProps) {
                                 <div className="room__topLeft">
                                     <Link href="/">
                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                            <title>arrow-left</title>
+                                            <title>Go Back</title>
                                             <path
                                             d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z"
                                             ></path>
@@ -48,7 +48,7 @@ export default async function Room({ params }: RoomComponentProps) {
                                         width="32"
                                         xmlns="http://www.w3.org/2000/svg"
                                         >
-                                        <title>edit</title>
+                                        <title>Edit Room</title>
                                         <g>
                                             <path d="m23.5 22h-15c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h15c.276 0 .5.224.5.5s-.224.5-.5.5z" />
                                         </g>
@@ -68,7 +68,7 @@ export default async function Room({ params }: RoomComponentProps) {
                                     </Link>
                                     <Link href={`/delete-room/${room.id}`}>
                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                        <title>remove</title>
+                                        <title>Delete Room</title>
                                         <path
                                             d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
                                         ></path>
