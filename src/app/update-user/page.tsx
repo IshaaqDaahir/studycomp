@@ -19,10 +19,17 @@ export default function UpdateUser() {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setAvatarFile(e.target.files[0]);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -33,27 +40,29 @@ export default function UpdateUser() {
         try {
             const token = localStorage.getItem('access_token');
             if (!token) {
-                setError('You need to log in first');
+                setError('You need to log in first!');
                 return;
             }
 
-            // Filter out empty fields
-            const payload = Object.fromEntries(
-                Object.entries(formData).filter(([_, v]) => v !== '')
-            );
+            const payload = new FormData();
+            payload.append('name', formData.name);
+            payload.append('email', formData.email);
+            payload.append('username', formData.username);
+            payload.append('bio', formData.bio);
+            if (avatarFile) {
+                payload.append('avatar', avatarFile);
+            }
 
             const response = await fetchFromDjango('api/users/update/', {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(payload)
+                body: payload
             });
 
             // Update user in context and local storage
             updateUser(response);
-
             router.push(`/profile/${response.id}/`);
         } catch (err: any) {
             setError(err.message || "Failed to update profile");
@@ -129,12 +138,18 @@ export default function UpdateUser() {
 
                                 <div className="form__group">
                                     <label>Profile Image</label>
+                                    {currentUser?.avatar && (
+                                        <img 
+                                            src={currentUser.avatar} 
+                                            alt="Existing Image" 
+                                            style={{ width: '100px', display: 'block', marginBottom: '10px' }} 
+                                        />
+                                    )}
                                     <input
-                                        type="text"
+                                        type="file"
                                         name="avatar"
-                                        placeholder="Paste image URL"
-                                        value={formData.avatar}
-                                        onChange={handleChange}
+                                        accept="image/*"
+                                        onChange={handleFileChange}
                                     />
                                 </div>
 
