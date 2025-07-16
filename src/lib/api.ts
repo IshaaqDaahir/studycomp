@@ -6,7 +6,6 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
         const response = await fetch(`${API_URL}${endpoint}`, {
         ...options,
         headers: {
-            'Content-Type': 'application/json',
             ...options.headers,
         },
         credentials: 'include',
