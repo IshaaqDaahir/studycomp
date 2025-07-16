@@ -21,6 +21,9 @@ export default function Login() {
     try {
       const data = await fetchFromDjango("api/login/", {
         method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ email, password }),
       });
 
@@ -35,7 +38,7 @@ export default function Login() {
       // Redirect to home page or previous page
       router.push("/");
     } catch (err: unknown) {
-      setError(err instanceof Error ? "Incorrect Email or Password!" : "An unknown error occurred");
+      setError(err instanceof Error ? "An unknown error occurred" : "Incorrect Email or Password!");
       setIsLoading(false);
     }
   };
