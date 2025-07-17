@@ -33,7 +33,13 @@ export default async function ActivityComponent({ messagesList, query }: Activit
                         <div className="activities__boxHeader roomListRoom__header">
                             <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
                                 <div className="avatar avatar--small">
-                                    <Image src={message.user.avatar} width={32} height={32} alt="Message User Avatar" />
+                                     <Image
+                                        src={`http://localhost:8000${message.user.avatar}`}
+                                        alt="Avatar"
+                                        width={100}
+                                        height={100}
+                                        unoptimized={true} // Required for localhost in development
+                                    />
                                 </div>
                                 <p>
                                     @{message.user.username}
@@ -70,7 +76,13 @@ export default async function ActivityComponent({ messagesList, query }: Activit
                             <div className="activities__boxHeader roomListRoom__header">
                                 <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
                                     <div className="avatar avatar--small">
-                                        <Image src={message.user.avatar} width={32} height={32} alt="Message User Avatar" />
+                                         <Image
+                                            src={`http://localhost:8000${message.user.avatar}`}
+                                            alt="Avatar"
+                                            width={100}
+                                            height={100}
+                                            unoptimized={true} // Required for localhost in development
+                                        />
                                     </div>
                                     <p>
                                         @{message.user.username}

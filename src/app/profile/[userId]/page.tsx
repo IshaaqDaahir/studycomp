@@ -31,7 +31,13 @@ export default async function Profile({ params }: ProfileComponentProps) {
                         <div className="profile">
                             <div className="profile__avatar">
                                 <div className="avatar avatar--large active">
-                                    <Image src={user.avatar} alt="User Avatar" width={32} height={32} />
+                                    <Image
+                                        src={`http://localhost:8000${user.avatar}`}
+                                        alt="Avatar"
+                                        width={100}
+                                        height={100}
+                                        unoptimized={true} // Required for localhost in development
+                                    />
                                 </div>
                             </div>
                             <div className="profile__info">

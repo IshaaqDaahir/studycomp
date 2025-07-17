@@ -31,7 +31,13 @@ export default async function UserFeedComponent({ currentUserId }: CurrentUserId
                     <div className="roomListRoom__header">
                         <Link href={`/profile/${room.host.id}/`} className="roomListRoom__author">
                             <div className="avatar avatar--small">
-                                <Image src={room.host.avatar || avatar} alt="Host Avatar" width={32} height={32} />
+                                <Image
+                                    src={`http://localhost:8000${room.host.avatar}`}
+                                    alt="Avatar"
+                                    width={100}
+                                    height={100}
+                                    unoptimized={true} // Required for localhost in development
+                                />
                             </div>
                             <span>@{room.host.username}</span>
                         </Link>
