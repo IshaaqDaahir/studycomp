@@ -19,9 +19,16 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
         const data = text ? JSON.parse(text) : {};
 
         if (!response.ok) {
+            // Handle Django validation errors
+            if (response.status === 400 && typeof data === 'object') {
+                // Return the error object directly
+                return Promise.reject(data);
+            }
+            
             // Use server error message if available
             const errorMessage = data.error || data.detail || 'Request failed';
             throw new Error(`${errorMessage} (${response.status})`);
+
         }
 
         return data;

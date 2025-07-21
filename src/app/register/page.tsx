@@ -34,6 +34,9 @@ export default function Register() {
         try {
             const response = await fetchFromDjango('api/register/', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(formData)
             });
 
@@ -47,9 +50,21 @@ export default function Register() {
                 router.push('/login');
             }
         } catch (error: any) {
-            if (error.message && typeof error.message === 'object') {
-                setErrors(error.message);
-            } else {
+            if (typeof error === 'object') {
+            // Handle Django field errors
+            const djangoErrors: Record<string, string[]> = {};
+            
+            // Convert Django error format to match our state
+            for (const [key, value] of Object.entries(error)) {
+                if (Array.isArray(value)) {
+                    djangoErrors[key] = value;
+                } else if (typeof value === 'string') {
+                    djangoErrors[key] = [value];
+                }
+            }
+            
+            setErrors(djangoErrors);
+        } else {
                 setErrors({ non_field_errors: [error.message || 'Registration failed'] });
             }
         } finally {
