@@ -12,11 +12,13 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+    setFieldErrors({});
 
     try {
       const data = await fetchFromDjango("api/login/", {
@@ -37,10 +39,27 @@ export default function Login() {
 
       // Redirect to home page or previous page
       router.push("/");
-    } catch (err: unknown) {
-      setError(err instanceof Error ? "An unknown error occurred" : "Incorrect Email or Password!");
+    } catch (err: any) {
+        if (typeof error === 'object') {
+            // Handle Django field errors
+            const djangoErrors: Record<string, string[]> = {};
+            
+            // Convert Django error format to match our state
+            for (const [key, value] of Object.entries(error)) {
+                if (Array.isArray(value)) {
+                    djangoErrors[key] = value;
+                } else if (typeof value === 'string') {
+                    djangoErrors[key] = [value];
+                }
+            }
+            
+            setFieldErrors(djangoErrors);
+        } else {
+            setError(err.message || 'Registration failed');
+            }
+      } finally {
       setIsLoading(false);
-    }
+      }
   };
 
   return (
