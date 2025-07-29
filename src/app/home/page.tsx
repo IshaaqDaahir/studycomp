@@ -1,9 +1,9 @@
 import TopicsComponent from "@/app/topics/page";
-import ActivityComponent from "@/app/activity/page";
 import FeedComponent from "@/app/feed/page";
 import Link from "next/link";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
+import ActivityPage from "@/app/activity/page";
 
 // Types Declaration
     type TopicsComponentProps = {
@@ -75,7 +75,7 @@ export default async function HomePage({ searchParams }: TopicsComponentProps) {
 
                 {/* Activity Component with search results */}
                 <Suspense fallback={<div>Loading messages...</div>}>
-                    <div><ActivityComponent messagesList={searchResults?.messages} query={query} /></div>
+                    <div><ActivityPage searchParams={searchResults?.messages} /></div>
                 </Suspense>
                 </div>
             </main>

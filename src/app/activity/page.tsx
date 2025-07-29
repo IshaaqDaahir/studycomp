@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 // Types Declaration
     type Message = {
@@ -13,22 +14,29 @@ import { formatDistanceToNow } from 'date-fns';
         body: string;
     };
 
-    type ActivityComponentProps = {
-        messagesList: Message[];       
-        query?: string;      
-    };
-
-export default async function ActivityComponent({ messagesList, query }: ActivityComponentProps) {
-    const defaultMessages = await fetchFromDjango('api/messages/');
+export default async function ActivityPage ({ searchParams
+}: {
+    searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+    const query = searchParams?.q ? String(searchParams.q) : '';
+    const messages = await fetchFromDjango('api/messages/');
+    
+    // Filter messages based on query
+    const filteredMessages = query 
+        ? messages.filter((message: { body: string; user: { username: string; }; room: { name: string; }; }) => 
+            message.body.toLowerCase().includes(query.toLowerCase()) ||
+            message.user.username.toLowerCase().includes(query.toLowerCase()) ||
+            message.room.name.toLowerCase().includes(query.toLowerCase())
+          )
+        : messages;
 
     return (
         <div className="activities">
             <div className="activities__header">
                 <h2>{query ? `Activity for "${query}"` : 'Recent Activities'}</h2>
             </div>
-            {query ? (
-                messagesList?.length > 0 ? (
-                messagesList.map(message => (
+            {filteredMessages.length > 0 ? (
+                filteredMessages.map((message: { id: Key | null | undefined; user: { id: any; avatar: any; username: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }; created: string | number | Date; room: { id: any; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }; body: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
                     <div key={message.id} className="activities__box">
                         <div className="activities__boxHeader roomListRoom__header">
                             <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
@@ -50,7 +58,7 @@ export default async function ActivityComponent({ messagesList, query }: Activit
                             <div className="roomListRoom__actions">
                                 <Link href={`/delete-message/${message.id}/`}>
                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                    <title>remove</title>
+                                    <title>Delete Message</title>
                                     <path
                                         d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
                                     ></path>
@@ -67,11 +75,11 @@ export default async function ActivityComponent({ messagesList, query }: Activit
                     </div>
                 ))
                 ) : (
-                <p>No activity found matching &ldquo;{query}&rdquo;</p>
+                <p>No activity found{query ? ` matching "${query}"` : ''}</p>
                 )
-            ) : (
+            } : (
                 <div>
-                    {defaultMessages.map((message: Message) => (
+                    {messages.map((message: Message) => (
                         <div key={message.id} className="activities__box">
                             <div className="activities__boxHeader roomListRoom__header">
                                 <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
@@ -110,7 +118,7 @@ export default async function ActivityComponent({ messagesList, query }: Activit
                         </div>
                     ))}
                 </div>
-            )}
+            )
         </div>
     );
 }
