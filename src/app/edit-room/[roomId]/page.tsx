@@ -9,8 +9,29 @@ type Topic = {
     name: string    
 }
 
+type Room = {
+    id: string | number;
+    name: string;
+    description?: string;
+    host: {
+        id: string | number;
+        username: string;
+        email: string;
+        name: string;
+        bio?: string;
+        avatar?: string;
+    };
+    topic: Topic;
+    participants?: Array<{
+        id: string | number;
+        username: string;
+    }>;
+    updated: string;
+    created: string;
+};
+
 export default function EditRoomPage({ params }: { params: { roomId: string } }) {
-    const [room, setRoom] = useState<any>(null);
+    const [room, setRoom] = useState<Room | any>(null);
     const [topics, setTopics] = useState<Topic[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
