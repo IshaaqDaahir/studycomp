@@ -13,10 +13,7 @@ import { formatDistanceToNow } from 'date-fns';
         body: string;
     };
 
-export default async function ActivityPage ({ searchParams
-}: {
-    searchParams?: { [key: string]: string | string[] | undefined };
-}) {
+export default async function ActivityPage ({ searchParams }: { searchParams: { q?: string } }) {
     const query = searchParams?.q ? String(searchParams.q) : '';
     const messages = await fetchFromDjango('api/messages/');
     
