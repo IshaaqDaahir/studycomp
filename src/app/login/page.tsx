@@ -39,7 +39,7 @@ export default function Login() {
 
       // Redirect to home page or previous page
       router.push("/");
-    } catch (err: any) {
+    } catch (err: unknown) {
         if (typeof error === 'object') {
             // Handle Django field errors
             const djangoErrors: Record<string, string[]> = {};
@@ -55,7 +55,11 @@ export default function Login() {
             
             setFieldErrors(djangoErrors);
         } else {
-            setError(err.message || 'Registration failed');
+            setError(
+              typeof err === "object" && err !== null && "message" in err
+                ? String((err as { message?: string }).message)
+                : "Registration failed"
+            );
             }
       } finally {
       setIsLoading(false);

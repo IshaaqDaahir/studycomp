@@ -32,9 +32,13 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
         }
 
         return data;
-    } catch (error: any) {
+    } catch (error: unknown) {
         // Wrap network errors
-        throw new Error(error.message || 'Network request failed');
+        if (error instanceof Error) {
+            throw new Error(error.message || 'Network request failed');
+        } else {
+            throw new Error('Network request failed');
+        }
     }
 }
 
@@ -54,7 +58,7 @@ export async function logoutFromDjango() {
     }
 
     return true;
-  } catch (error:any) {
+  } catch (error: unknown) {
     console.error('Logout error:', error);
     return false;
   }

@@ -65,8 +65,12 @@ export default function UpdateUser() {
             // Update user in context and local storage
             updateUser(response);
             router.push(`/profile/${response.id}/`);
-        } catch (err: any) {
-            setError(err.message || "Failed to update profile");
+        } catch (err: unknown) {
+            if (err && typeof err === "object" && "message" in err) {
+                setError((err as { message: string }).message);
+            } else {
+                setError("Failed to update profile");
+            }
         } finally {
             setIsSubmitting(false);
         }

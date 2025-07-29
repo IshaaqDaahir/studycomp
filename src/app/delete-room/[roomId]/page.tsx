@@ -45,8 +45,12 @@ export default function DeleteRoomPage() {
             });
 
             router.push("/");
-        } catch (error: any) {
-            alert(`Failed to delete room: ${error.message}`);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(`Failed to delete room: ${error.message}`);
+            } else {
+                alert('Failed to delete room: An unknown error occurred.');
+            }
         }
     };
 

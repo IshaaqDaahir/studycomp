@@ -49,23 +49,25 @@ export default function Register() {
                 // Redirect to home page
                 router.push('/login');
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             if (typeof error === 'object') {
             // Handle Django field errors
             const djangoErrors: Record<string, string[]> = {};
             
             // Convert Django error format to match our state
-            for (const [key, value] of Object.entries(error)) {
-                if (Array.isArray(value)) {
-                    djangoErrors[key] = value;
-                } else if (typeof value === 'string') {
-                    djangoErrors[key] = [value];
+            if (error && typeof error === 'object') {
+                for (const [key, value] of Object.entries(error)) {
+                    if (Array.isArray(value)) {
+                        djangoErrors[key] = value;
+                    } else if (typeof value === 'string') {
+                        djangoErrors[key] = [value];
+                    }
                 }
             }
             
             setErrors(djangoErrors);
         } else {
-                setErrors({ non_field_errors: [error.message || 'Registration failed'] });
+                setErrors({ non_field_errors: [error && typeof error === 'object' && 'message' in error && error.message ? String(error.message) : typeof error === 'string' ? error : 'Registration failed'] });
             }
         } finally {
             setIsSubmitting(false);

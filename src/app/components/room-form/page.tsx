@@ -91,8 +91,9 @@ export default function RoomForm({ topics, room }: RoomFormProps) {
                 router.push(room ? `/room/${room.id}/` : `/room/${response.id}/`);
                 router.refresh();
             } 
-        } catch (error: any) {
-            alert(`Failed to ${room ? 'update' : 'create'} room: ${error.message}:`);
+        } catch (error: unknown) {
+            const errorMsg = (error instanceof Error) ? error.message : String(error);
+            alert(`Failed to ${room ? 'update' : 'create'} room: ${errorMsg}`);
         } finally {
             setIsSubmitting(false);
         }

@@ -4,9 +4,14 @@ import RoomForm from "@/app/components/room-form/page";
 import { fetchFromDjango } from "@/lib/api";
 import { useEffect, useState } from "react";
 
+type Topic = {
+    id: string | number;
+    name: string    
+}
+
 export default function EditRoomPage({ params }: { params: { roomId: string } }) {
     const [room, setRoom] = useState<any>(null);
-    const [topics, setTopics] = useState<any[]>([]);
+    const [topics, setTopics] = useState<Topic[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
