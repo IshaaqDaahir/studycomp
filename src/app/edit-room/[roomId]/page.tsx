@@ -26,8 +26,12 @@ export default function EditRoomPage({ params }: { params: { roomId: string } })
                 
                 setRoom(roomData);
                 setTopics(topicsData);
-            } catch (err: any) {
-                setError(err.message || "Failed to load data");
+            } catch (err: unknown) {
+                setError(
+                    typeof err === "object" && err !== null && "message" in err
+                        ? String((err as { message: unknown }).message)
+                        : "Failed to load data"
+                );
             } finally {
                 setLoading(false);
             }

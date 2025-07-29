@@ -36,7 +36,12 @@ export default function MessageForm({ roomId }: { roomId: number | string }) {
             setMessage(""); // Clear input after successful send
             router.refresh(); // Refresh to show new message
         } catch (err: unknown) {
-            if (err && typeof err === "object" && "message" in err && typeof (err as any).message === "string") {
+            if (
+                err &&
+                typeof err === "object" &&
+                "message" in (err as object) &&
+                typeof (err as { message?: unknown }).message === "string"
+            ) {
                 setError((err as { message: string }).message);
             } else {
                 setError("Failed to send message");
