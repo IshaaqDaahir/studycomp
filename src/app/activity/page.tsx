@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 // Types Declaration
     type Message = {
