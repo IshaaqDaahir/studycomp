@@ -1,5 +1,4 @@
 import Image from "next/image";
-import avatar from "../../../public/images/avatar.svg";
 import Link from "next/link";
 import { formatDistanceToNow } from 'date-fns';
 import { fetchFromDjango } from "@/lib/api";
@@ -72,7 +71,7 @@ export default async function FeedComponent({ roomsList, query }: FeedComponentP
                     </div>
                 ))
                 ) : (
-                <p>No rooms found matching "{query}"</p>
+                <p>No rooms found matching &ldquo;{query}&rdquo;</p>
                 )
             ) : (
                 <div>

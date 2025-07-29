@@ -92,7 +92,7 @@ export default function RoomForm({ topics, room }: RoomFormProps) {
                 router.refresh();
             } 
         } catch (error: any) {
-            alert(`Failed to ${room ? 'update' : 'create'} room: ${error.message}`);
+            alert(`Failed to ${room ? 'update' : 'create'} room: ${error.message}:`);
         } finally {
             setIsSubmitting(false);
         }

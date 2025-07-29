@@ -46,7 +46,7 @@ export default function Delete({ params }: ProfileComponentProps) {
         setError(null);
 
         try {
-            const response = await fetchFromDjango(`api/messages/${msgId}/`, {
+            await fetchFromDjango(`api/messages/${msgId}/`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export default function Delete({ params }: ProfileComponentProps) {
                             {!error && 
                             <div>
                                 <div className="form__group">
-                                    <p>Are you sure you want to delete "{message.body}"?</p>
+                                    <p>Are you sure you want to delete &ldquo;{message.body}&rdquo;?</p>
                                 </div>
 
                                 <div className="form__group">

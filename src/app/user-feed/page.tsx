@@ -1,5 +1,4 @@
 import Image from "next/image";
-import avatar from "../../../public/images/avatar.svg";
 import Link from "next/link";
 import { formatDistanceToNow } from 'date-fns';
 import { fetchFromDjango } from "@/lib/api";

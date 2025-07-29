@@ -73,7 +73,7 @@ export default function DeleteRoomPage() {
                     <div className="layout__body">
                         <form className="form" onSubmit={handleDelete}>
                             <div className="form__group">
-                                <p>Are you sure you want to delete "{roomName}"?</p>
+                                <p>Are you sure you want to delete &ldquo;{roomName}&rdquo;?</p>
                             </div>
                             <div className="for__group">
                                 <button className="btn btn--main" type="submit">Confirm</button>

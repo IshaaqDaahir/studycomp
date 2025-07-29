@@ -70,7 +70,6 @@ export default function NavBar(){
                                             alt="Avatar"
                                             width={100}
                                             height={100}
-                                            unoptimized={true} // Required for localhost in development
                                         />
                                     </div>
                                     <p>{user?.username} <span>@{user?.username}</span></p>

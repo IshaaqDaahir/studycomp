@@ -67,7 +67,7 @@ export default async function ActivityComponent({ messagesList, query }: Activit
                     </div>
                 ))
                 ) : (
-                <p>No activity found matching "{query}"</p>
+                <p>No activity found matching &ldquo;{query}&rdquo;</p>
                 )
             ) : (
                 <div>

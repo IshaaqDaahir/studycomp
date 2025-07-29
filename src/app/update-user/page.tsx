@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { fetchFromDjango } from "@/lib/api";
 import { useAuth } from "@/context/auth";
+import Image from "next/image";
 
 export default function UpdateUser() {
     const router = useRouter();
@@ -139,8 +140,8 @@ export default function UpdateUser() {
                                 <div className="form__group">
                                     <label>Profile Image</label>
                                     {currentUser?.avatar && (
-                                        <img 
-                                            src={currentUser.avatar} 
+                                        <Image 
+                                            src={`http://localhost:8000${currentUser.avatar}`}
                                             alt="Existing Image" 
                                             style={{ width: '100px', display: 'block', marginBottom: '10px' }} 
                                         />

@@ -88,7 +88,13 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
+                {fieldErrors.email && (
+                  <span className="form__error-text">
+                    {fieldErrors.email.join(', ')}
+                  </span>
+                )}
               </div>
+
               <div className="form__group">
                 <label>Password</label>
                 <input
@@ -101,6 +107,11 @@ export default function Login() {
                   required
                   minLength={8}
                 />
+                {fieldErrors.password && (
+                  <span className="form__error-text">
+                    {fieldErrors.password.join(', ')}
+                  </span>
+                )}
               </div>
 
               <button
@@ -128,7 +139,7 @@ export default function Login() {
             </form>
 
             <div className="auth__action">
-              <p>Haven't signed up yet?</p>
+              <p>Haven&rsquo;t signed up yet?</p>
               <Link href="/register" className="btn btn--link">
                 Sign Up
               </Link>
