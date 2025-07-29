@@ -31,7 +31,7 @@ type Room = {
 };
 
 export default function EditRoomPage({ params }: { params: { roomId: string } }) {
-    const [room, setRoom] = useState<Room | any>(null);
+    const [room, setRoom] = useState<Room | null>(null);
     const [topics, setTopics] = useState<Topic[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -64,5 +64,19 @@ export default function EditRoomPage({ params }: { params: { roomId: string } })
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
     
-    return <RoomForm topics={topics} room={room} />;
+    return (
+        <RoomForm
+            topics={topics}
+            room={
+                room
+                    ? {
+                        id: typeof room.id === "string" ? parseInt(room.id as string, 10) : room.id,
+                        name: room.name,
+                        description: room.description ?? "",
+                        topic: room.topic,
+                    }
+                    : undefined
+            }
+        />
+    );
 }
