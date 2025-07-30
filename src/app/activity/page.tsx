@@ -13,15 +13,17 @@ type Message = {
     body: string;
 };
 
-export default async function ActivityPage ({ searchParams}: {
-        searchParams?: { [key: string]: string | string[] | undefined };
-    }) {
+export default async function ActivityPage ({ 
+    searchParams
+}: {
+    searchParams?: { [key: string]: string | string[] | undefined };
+}) {
     const query = searchParams?.q ? String(searchParams.q) : '';
-    const messages = await fetchFromDjango('api/messages/');
+    const messages: Message[] = await fetchFromDjango('api/messages/');
     
     // Filter messages based on query
     const filteredMessages = query 
-        ? messages.filter((message: { body: string; user: { username: string; }; room: { name: string; }; }) => 
+        ? messages.filter(message => 
             message.body.toLowerCase().includes(query.toLowerCase()) ||
             message.user.username.toLowerCase().includes(query.toLowerCase()) ||
             message.room.name.toLowerCase().includes(query.toLowerCase())
@@ -34,7 +36,7 @@ export default async function ActivityPage ({ searchParams}: {
                 <h2>{query ? `Activity for "${query}"` : 'Recent Activities'}</h2>
             </div>
             {filteredMessages.length > 0 ? (
-                filteredMessages.map((message: { id: number; user: { id: number; avatar: File; username: string}; created: string | number | Date; room: { id: number; name: string; }; body: string;}) => (
+                filteredMessages.map(message => (
                     <div key={message.id} className="activities__box">
                         <div className="activities__boxHeader roomListRoom__header">
                             <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
@@ -74,49 +76,7 @@ export default async function ActivityPage ({ searchParams}: {
                 ))
                 ) : (
                 <p>No activity found{query ? ` matching "${query}"` : ''}</p>
-                )
-            } : (
-                <div>
-                    {messages.map((message: Message) => (
-                        <div key={message.id} className="activities__box">
-                            <div className="activities__boxHeader roomListRoom__header">
-                                <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
-                                    <div className="avatar avatar--small">
-                                         <Image
-                                            src={`http://localhost:8000${message.user.avatar}`}
-                                            alt="Avatar"
-                                            width={100}
-                                            height={100}
-                                            unoptimized={true} // Required for localhost in development
-                                        />
-                                    </div>
-                                    <p>
-                                        @{message.user.username}
-                                        <span>{formatDistanceToNow(new Date(message.created))} ago</span>
-                                    </p>
-                                </Link>
-
-                                <div className="roomListRoom__actions">
-                                    <Link href={`/delete-message/${message.id}/`}>
-                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                        <title>remove</title>
-                                        <path
-                                            d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
-                                        ></path>
-                                        </svg>
-                                    </Link>
-                                </div>
-                            </div>
-                            <div className="activities__boxContent">
-                                <p>replied to post in “<Link href={`/room/${message.room.id}`}>{message.room.name}</Link>”</p>
-                                <div className="activities__boxRoomContent">
-                                    {message.body}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )
+                )} 
         </div>
     );
 }
