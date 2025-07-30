@@ -16,7 +16,7 @@ type Message = {
 export default async function ActivityPage ({ 
     searchParams
 }: {
-    searchParams?: { [key: string]: string | string[] | undefined };
+    searchParams?: { q?: string };
 }) {
     const query = searchParams?.q ? String(searchParams.q) : '';
     const messages: Message[] = await fetchFromDjango('api/messages/');
