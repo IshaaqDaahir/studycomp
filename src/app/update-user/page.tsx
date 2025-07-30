@@ -147,7 +147,9 @@ export default function UpdateUser() {
                                         <Image 
                                             src={`http://localhost:8000${currentUser.avatar}`}
                                             alt="Existing Image" 
-                                            style={{ width: '100px', display: 'block', marginBottom: '10px' }} 
+                                            style={{ width: '100px', display: 'block', marginBottom: '10px' }}
+                                            width={100}
+                                            height={100}
                                         />
                                     )}
                                     <input
