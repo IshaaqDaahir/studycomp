@@ -4,16 +4,18 @@ import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
 
 // Types Declaration
-    type Message = {
-        id: string | number;
-        name: string;
-        user: {id: number, avatar: string, username: string};
-        created: string;
-        room: {name: string, id: number};
-        body: string;
-    };
+type Message = {
+    id: string | number;
+    name: string;
+    user: {id: number, avatar: string, username: string};
+    created: string;
+    room: {name: string, id: number};
+    body: string;
+};
 
-export default async function ActivityPage ({ searchParams }: { searchParams: { q?: string } }) {
+export default async function ActivityPage ({ searchParams}: {
+        searchParams?: { [key: string]: string | string[] | undefined };
+    }) {
     const query = searchParams?.q ? String(searchParams.q) : '';
     const messages = await fetchFromDjango('api/messages/');
     
