@@ -3,7 +3,7 @@ import FeedComponent from "@/app/feed/page";
 import Link from "next/link";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
-import ActivityPage from "@/app/activity/page";
+import ActivityComponent from "../components/activity-component/page";
 
 // Types Declaration
     type TopicsComponentProps = {
@@ -75,7 +75,10 @@ export default async function HomePage({ searchParams }: TopicsComponentProps) {
 
                 {/* Activity Component with search results */}
                 <Suspense fallback={<div>Loading messages...</div>}>
-                    <div><ActivityPage searchParams={searchResults?.messages} /></div>
+                    <div><ActivityComponent 
+                        messageList={searchResults?.messages || []}
+                        query={query} />
+                    </div>
                 </Suspense>
                 </div>
             </main>

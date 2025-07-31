@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
+import { fetchFromDjango } from "@/lib/api";
 
 // Types Declaration
 type Message = {
@@ -11,19 +11,19 @@ type Message = {
     created: string;
     room: {name: string, id: number};
     body: string;
+}; 
+
+type ActivityComponentProps = {
+    messageList: Message[];       
+    query?: string;      
 };
 
-export default async function ActivityPage ({ 
-    searchParams
-}: {
-    searchParams: { q: string };
-}) {
-    const query = await searchParams.q
+export default async function ActivityComponent({ messageList, query }: ActivityComponentProps) {
     const messages: Message[] = await fetchFromDjango('api/messages/');
-    
+
     // Filter messages based on query
     const filteredMessages = query 
-        ? messages.filter(message => 
+        ? messageList.filter(message => 
             message.body.toLowerCase().includes(query.toLowerCase()) ||
             message.user.username.toLowerCase().includes(query.toLowerCase()) ||
             message.room.name.toLowerCase().includes(query.toLowerCase())
@@ -46,7 +46,7 @@ export default async function ActivityPage ({
                                         alt="Avatar"
                                         width={100}
                                         height={100}
-                                        unoptimized={true} // Required for localhost in development
+                                        unoptimized={true}
                                     />
                                 </div>
                                 <p>
@@ -74,9 +74,9 @@ export default async function ActivityPage ({
                         </div>
                     </div>
                 ))
-                ) : (
+            ) : (
                 <p>No activity found{query ? ` matching "${query}"` : ''}</p>
-                )} 
+            )} 
         </div>
     );
 }
