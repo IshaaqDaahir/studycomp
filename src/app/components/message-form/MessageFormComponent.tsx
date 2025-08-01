@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import { fetchFromDjango } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
-export default function MessageForm({ roomId }: { roomId: number | string }) {
+export default function MessageFormComponent({ roomId }: { roomId: number | string }) {
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");

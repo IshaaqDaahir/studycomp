@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import RoomConversationComponent from "@/app/components/room-conversation/RoomConversationComponent";
 import RoomParticipantsComponent from "@/app/components/room-participants/RoomParticipantsComponent";
-import MessageForm from "@/app/components/message-form/FeedComponent";
+import MessageForm from "@/app/components/message-form/MessageFormComponent";
 
 // Types Declaration
     type RoomComponentProps = {
