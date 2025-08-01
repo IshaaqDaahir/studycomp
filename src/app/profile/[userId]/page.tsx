@@ -1,17 +1,17 @@
-import TopicsComponent from "@/app/topics/page";
+import TopicsComponent from "@/app/components/topics/TopicsComponent";
 import Image from "next/image";
-import UserFeedComponent from "@/app/user-feed/page";
+import UserFeedComponent from "@/app/components/user-feed/UserFeedComponent";
 import Link from "next/link";
 import NavBar from "../../navbar/page";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
-import UserActivityComponent from "@/app/user-activity/page";
+import UserActivityComponent from "@/app/components/user-activity/UserActivityComponent";
 
 type ProfileComponentProps = {
         params: { userId: string | number }; 
     };
 
-export default async function Profile({ params }: ProfileComponentProps) {
+export default async function ProfilePage({ params }: ProfileComponentProps) {
     const {userId} = await params;
 
     const user = await fetchFromDjango(`api/users/${userId}/`);

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchFromDjango } from "@/lib/api";
 
-export default function Register() {
+export default function RegisterPage() {
     const router = useRouter();
     const [formData, setFormData] = useState({
         name: '',

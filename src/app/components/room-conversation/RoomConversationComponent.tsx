@@ -17,7 +17,7 @@ import { formatDistanceToNow } from 'date-fns';
         body: string;
     };
 
-export default async function RoomConversation({ currentRoomId }: CurrentRoomId) {
+export default async function RoomConversationComponent({ currentRoomId }: CurrentRoomId) {
     const messages = await fetchFromDjango("api/messages/");
 
     // Filter messages by room ID

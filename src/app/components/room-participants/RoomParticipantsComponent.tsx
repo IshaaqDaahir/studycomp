@@ -14,7 +14,7 @@ import { fetchFromDjango } from '@/lib/api';
         username: string;
     };
 
-export default async function RoomParticipants({ currentRoomId }: CurrentRoomId) {
+export default async function RoomParticipantsComponent({ currentRoomId }: CurrentRoomId) {
     const data = await fetchFromDjango("api/rooms/");
 
     // Filter room by the current room ID - returns an array

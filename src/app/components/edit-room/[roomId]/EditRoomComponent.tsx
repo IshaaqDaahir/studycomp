@@ -1,6 +1,6 @@
 "use client"
 
-import RoomForm from "@/app/components/room-form/page";
+import RoomForm from "@/app/components/room-form/RoomFormComponent";
 import { fetchFromDjango } from "@/lib/api";
 import { useEffect, useState } from "react";
 
@@ -30,7 +30,7 @@ type Room = {
     created: string;
 };
 
-export default function EditRoomPage({ params }: { params: { roomId: string } }) {
+export default function EditRoomComponent({ params }: { params: { roomId: string } }) {
     const [room, setRoom] = useState<Room | null>(null);
     const [topics, setTopics] = useState<Topic[]>([]);
     const [loading, setLoading] = useState(true);

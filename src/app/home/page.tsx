@@ -1,9 +1,9 @@
-import TopicsComponent from "@/app/topics/page";
-import FeedComponent from "@/app/feed/page";
+import TopicsComponent from "@/app/components/topics/TopicsComponent";
+import FeedComponent from "@/app/components/feed/FeedComponent";
 import Link from "next/link";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
-import ActivityComponent from "../components/activity-component/page";
+import ActivityComponent from "../components/activity/ActivityComponent";
 
 // Types Declaration
     type TopicsComponentProps = {

@@ -1,14 +1,14 @@
 "use client"
 
 import Link from "next/link";
-import NavBar from "../navbar/page";
+import NavBar from "@/app/navbar/page";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { fetchFromDjango } from "@/lib/api";
 import { useAuth } from "@/context/auth";
 import Image from "next/image";
 
-export default function UpdateUser() {
+export default function UpdateUserComponent() {
     const router = useRouter();
     const { user: currentUser, updateUser } = useAuth(); // Get updateUser from context
     const [formData, setFormData] = useState({

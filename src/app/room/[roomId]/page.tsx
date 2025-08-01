@@ -4,16 +4,16 @@ import NavBar from "../../navbar/page";
 import { fetchFromDjango } from '@/lib/api';
 import { Suspense } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import RoomConversation from "@/app/room-conversation/page";
-import RoomParticipants from "@/app/room-participants/page";
-import MessageForm from "@/app/components/message-form/page";
+import RoomConversationComponent from "@/app/components/room-conversation/RoomConversationComponent";
+import RoomParticipantsComponent from "@/app/components/room-participants/RoomParticipantsComponent";
+import MessageForm from "@/app/components/message-form/FeedComponent";
 
 // Types Declaration
     type RoomComponentProps = {
         params: { roomId: number | string };
     };
 
-export default async function Room({ params }: RoomComponentProps) {
+export default async function RoomPage({ params }: RoomComponentProps) {
     const { roomId } = await params;
     const  room = await fetchFromDjango(`api/rooms/${roomId}/`);
 
@@ -97,14 +97,14 @@ export default async function Room({ params }: RoomComponentProps) {
                                     <span className="room__topics">{room.topic.name}</span>
                                 </div>
 
-                                <RoomConversation currentRoomId={room.id} />
+                                <RoomConversationComponent currentRoomId={room.id} />
                             </div>
                             
                             <MessageForm roomId={room.id} />
                         </div>
                         {/* Room End */}
 
-                        <RoomParticipants currentRoomId={room.id} />
+                        <RoomParticipantsComponent currentRoomId={room.id} />
                     </div>
                 </main>
             </div>  

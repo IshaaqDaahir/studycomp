@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
         params: { msgId: string | number }; 
     };
 
-export default function Delete({ params }: ProfileComponentProps) {
+export default function DeleteMessageComponent({ params }: ProfileComponentProps) {
     const {msgId} = params;
     const [message, setMessage] = useState<Message | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -53,13 +53,8 @@ export default function Delete({ params }: ProfileComponentProps) {
                 },
             });
 
-            // Redirect to the room page after successful deletion
-            if (message) {
-                router.push(`/room/${message.room.id}/`);
-                router.refresh(); // Optional: refresh to show updated message list
-            } else {
-                router.push("/home"); // Fallback if no room info
-            }
+            // Redirect to the home page after successful deletion
+            router.push("/home");
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to delete message');
             setIsDeleting(false);
@@ -76,7 +71,7 @@ export default function Delete({ params }: ProfileComponentProps) {
                 <div className="layout__box">
                     <div className="layout__boxHeader">
                         <div className="layout__boxTitle">
-                            <Link href={message ? `/room/${message.room.id}/` : "/"}>
+                            <Link href="/">
                                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                     viewBox="0 0 32 32">
                                     <title>arrow-left</title>

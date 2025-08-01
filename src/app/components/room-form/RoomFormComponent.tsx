@@ -21,7 +21,7 @@ type RoomFormProps = {
     };
 }
 
-export default function RoomForm({ topics, room }: RoomFormProps) {
+export default function RoomFormComponent({ topics, room }: RoomFormProps) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
