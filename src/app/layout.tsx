@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../../public/styles/main.css"
 import "../../public/styles/style.css"
 import { AuthProvider } from "@/context/auth";
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   title: "StudyCompanion  | Find study companions around the world!",
@@ -19,7 +20,7 @@ export default function RootLayout({
             <AuthProvider>
                 {children}
             </AuthProvider>
-            <script src="/js/script.js"></script>
+            <Script src="/js/script.js"></Script>
         </body>
     </html>
   );

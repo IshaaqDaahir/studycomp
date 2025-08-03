@@ -8,10 +8,10 @@ import ActivityComponent from "./components/activity/ActivityComponent";
 
 // Types Declaration
     type HomePageProps = {
-        searchParams: { q?: string }; 
+        searchParams: Promise<{ q?: string }>; 
     };
 
-export default async function HomePage({ searchParams }: HomePageProps) {
+export default async function Dashboard({ searchParams }: HomePageProps) {
     const rooms = await fetchFromDjango('api/rooms/');
     
     const passedQuery = await searchParams;

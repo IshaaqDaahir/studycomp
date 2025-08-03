@@ -15,7 +15,7 @@ import { fetchFromDjango } from "@/lib/api";
         topic?: {name: string};
     };
     type TopicsComponentProps = {
-        searchParams: { q?: string }; 
+        searchParams: Promise<{ q?: string }>; 
     };
 
 export default async function TopicsComponent({ searchParams }: TopicsComponentProps) {

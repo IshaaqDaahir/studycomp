@@ -8,7 +8,7 @@ import { fetchFromDjango } from "@/lib/api";
 import UserActivityComponent from "@/app/components/user-activity/UserActivityComponent";
 
 type ProfileComponentProps = {
-        params: { userId: string | number }; 
+        params: Promise<{ userId: string | number }>; 
     };
 
 export default async function ProfilePage({ params }: ProfileComponentProps) {
@@ -23,7 +23,7 @@ export default async function ProfilePage({ params }: ProfileComponentProps) {
                 <main className="profile-page layout layout--3">
                     <div className="container">
                     {/* Topics Start */}
-                    <div><TopicsComponent searchParams={{}}/></div>
+                    <div><TopicsComponent searchParams={Promise.resolve({})}/></div>
                     {/* Topics End */}
 
                     {/* Room List Start */}

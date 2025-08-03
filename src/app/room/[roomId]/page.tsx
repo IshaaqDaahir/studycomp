@@ -10,7 +10,7 @@ import MessageForm from "@/app/components/message-form/MessageFormComponent";
 
 // Types Declaration
     type RoomComponentProps = {
-        params: { roomId: number | string };
+        params: Promise<{ roomId: number | string }>;
     };
 
 export default async function RoomPage({ params }: RoomComponentProps) {
