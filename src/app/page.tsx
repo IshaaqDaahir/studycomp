@@ -1,4 +1,4 @@
-import NavBar from "@/app/navbar/page";
+import NavBar from "@/app/components/navbar/NavBar";
 import TopicsComponent from "@/app/components/topics/TopicsComponent";
 import FeedComponent from "@/app/components/feed/FeedComponent";
 import Link from "next/link";

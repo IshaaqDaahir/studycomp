@@ -2,7 +2,7 @@ import TopicsComponent from "@/app/components/topics/TopicsComponent";
 import Image from "next/image";
 import UserFeedComponent from "@/app/components/user-feed/UserFeedComponent";
 import Link from "next/link";
-import NavBar from "../../navbar/page";
+import NavBar from "../../components/navbar/NavBar";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
 import UserActivityComponent from "@/app/components/user-activity/UserActivityComponent";

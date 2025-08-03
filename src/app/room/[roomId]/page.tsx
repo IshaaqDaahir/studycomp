@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import NavBar from "../../navbar/page";
+import NavBar from "../../components/navbar/NavBar";
 import { fetchFromDjango } from '@/lib/api';
 import { Suspense } from 'react';
 import { formatDistanceToNow } from 'date-fns';
