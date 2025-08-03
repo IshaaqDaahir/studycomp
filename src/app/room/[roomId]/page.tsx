@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import NavBar from "../../components/navbar/NavBar";
+import NavBar from "../../../components/navbar/NavBar";
 import { fetchFromDjango } from '@/lib/api';
 import { Suspense } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import RoomConversationComponent from "@/app/components/room-conversation/RoomConversationComponent";
-import RoomParticipantsComponent from "@/app/components/room-participants/RoomParticipantsComponent";
-import MessageForm from "@/app/components/message-form/MessageFormComponent";
+import RoomConversationComponent from "@/components/room-conversation/RoomConversationComponent";
+import RoomParticipantsComponent from "@/components/room-participants/RoomParticipantsComponent";
+import MessageForm from "@/components/message-form/MessageFormComponent";
 
 // Types Declaration
     type RoomComponentProps = {

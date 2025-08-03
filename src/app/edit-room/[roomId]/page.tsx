@@ -1,6 +1,6 @@
 "use client"
 
-import RoomForm from "@/app/components/room-form/RoomFormComponent";
+import RoomForm from "@/components/room-form/RoomFormComponent";
 import { fetchFromDjango } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { use } from 'react'

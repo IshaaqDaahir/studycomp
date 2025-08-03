@@ -1,11 +1,11 @@
-import TopicsComponent from "@/app/components/topics/TopicsComponent";
+import TopicsComponent from "@/components/topics/TopicsComponent";
 import Image from "next/image";
-import UserFeedComponent from "@/app/components/user-feed/UserFeedComponent";
+import UserFeedComponent from "@/components/user-feed/UserFeedComponent";
 import Link from "next/link";
-import NavBar from "../../components/navbar/NavBar";
+import NavBar from "../../../components/navbar/NavBar";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
-import UserActivityComponent from "@/app/components/user-activity/UserActivityComponent";
+import UserActivityComponent from "@/components/user-activity/UserActivityComponent";
 
 type ProfilePageProps = {
         params: Promise<{ userId: string | number }>; 

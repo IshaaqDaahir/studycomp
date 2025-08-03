@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-import NavBar from "@/app/components/navbar/NavBar";
+import NavBar from "@/components/navbar/NavBar";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { fetchFromDjango } from "@/lib/api";

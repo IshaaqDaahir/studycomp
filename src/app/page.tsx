@@ -1,10 +1,10 @@
-import NavBar from "@/app/components/navbar/NavBar";
-import TopicsComponent from "@/app/components/topics/TopicsComponent";
-import FeedComponent from "@/app/components/feed/FeedComponent";
+import NavBar from "@/components/navbar/NavBar";
+import TopicsComponent from "@/components/topics/TopicsComponent";
+import FeedComponent from "@/components/feed/FeedComponent";
 import Link from "next/link";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
-import ActivityComponent from "./components/activity/ActivityComponent";
+import ActivityComponent from "../components/activity/ActivityComponent";
 
 // Types Declaration
     type HomePageProps = {
