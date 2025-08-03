@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import "../../public/styles/main.css"
 import "../../public/styles/style.css"
 import { AuthProvider } from "@/context/auth";
 import Script from 'next/script'
