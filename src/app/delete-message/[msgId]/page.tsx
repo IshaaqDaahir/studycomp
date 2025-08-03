@@ -4,6 +4,7 @@ import { fetchFromDjango } from "@/lib/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { use } from 'react'
 
 // Types Declaration
     type Message = {
@@ -15,12 +16,12 @@ import { useEffect, useState } from "react";
         body: string;
     };
 
-    type ProfileComponentProps = {
-        params: { msgId: string | number }; 
+    type DeleteMessageComponentProps = {
+        params: Promise<{ msgId: string | number }>; 
     };
 
-export default function DeleteMessageComponent({ params }: ProfileComponentProps) {
-    const {msgId} = params;
+export default function DeleteMessageComponent({ params }: DeleteMessageComponentProps) {
+    const {msgId} = use(params);
     const [message, setMessage] = useState<Message | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);

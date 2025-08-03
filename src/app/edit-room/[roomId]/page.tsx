@@ -3,6 +3,7 @@
 import RoomForm from "@/app/components/room-form/RoomFormComponent";
 import { fetchFromDjango } from "@/lib/api";
 import { useEffect, useState } from "react";
+import { use } from 'react'
 
 type Topic = {
     id: string | number;
@@ -30,17 +31,22 @@ type Room = {
     created: string;
 };
 
-export default function EditRoomComponent({ params }: { params: { roomId: string } }) {
+type EditRoomComponentProps = {
+    params: Promise<{ roomId: string }>;
+};
+
+export default function EditRoomComponent({ params }: EditRoomComponentProps) {
     const [room, setRoom] = useState<Room | null>(null);
     const [topics, setTopics] = useState<Topic[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const { roomId } = use(params)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Fetch room data
-                const roomData = await fetchFromDjango(`api/rooms/${params.roomId}/`);
+                const roomData = await fetchFromDjango(`api/rooms/${roomId}/`);
                 
                 // Fetch topics
                 const topicsData = await fetchFromDjango('api/topics/');
@@ -59,7 +65,7 @@ export default function EditRoomComponent({ params }: { params: { roomId: string
         };
         
         fetchData();
-    }, [params.roomId]);
+    }, [roomId]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;

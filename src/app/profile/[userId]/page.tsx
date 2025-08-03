@@ -7,11 +7,11 @@ import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
 import UserActivityComponent from "@/app/components/user-activity/UserActivityComponent";
 
-type ProfileComponentProps = {
+type ProfilePageProps = {
         params: Promise<{ userId: string | number }>; 
     };
 
-export default async function ProfilePage({ params }: ProfileComponentProps) {
+export default async function ProfilePage({ params }: ProfilePageProps) {
     const {userId} = await params;
 
     const user = await fetchFromDjango(`api/users/${userId}/`);
