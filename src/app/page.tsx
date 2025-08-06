@@ -7,13 +7,36 @@ import { fetchFromDjango } from "@/lib/api";
 import ActivityComponent from "../components/activity/ActivityComponent";
 
 // Types Declaration
-    type HomePageProps = {
-        searchParams: Promise<{ q?: string }>; 
+type HomePageProps = {
+    searchParams: Promise<{ q?: string }>; 
+};
+
+type Topic = {
+    id: string | number;
+    name: string;
+};
+
+type Message = {
+    id: string | number;
+    name: string;
+    user: {id: number, avatar: string, username: string};
+    created: string;
+    room: {name: string, id: number};
+    body: string;
+}; 
+
+type Room = {
+        id: string | number;
+        host: {id: string | number, avatar: string, username: string};
+        participants: {length: number};
+        topic: {name: string};
+        created: string;
+        name: string;
     };
 
 export default async function Dashboard({ searchParams }: HomePageProps) {
-    let rooms: any[] = [];
-    let searchResults: { rooms: any[]; messages: any[] } = { rooms: [], messages: [] };
+    let rooms: Room[] = [];
+    let searchResults: { rooms: Room[]; messages: Message[] } = { rooms: [], messages: [] };
     let errorMsg = '';
     try {
         rooms = await fetchFromDjango('api/rooms/');
