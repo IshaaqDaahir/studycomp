@@ -12,8 +12,8 @@ import ActivityComponent from "../components/activity/ActivityComponent";
     };
 
 export default async function Dashboard({ searchParams }: HomePageProps) {
-    let rooms = [];
-    let searchResults: any = { rooms: [], messages: [] };
+    let rooms: any[] = [];
+    let searchResults: { rooms: any[]; messages: any[] } = { rooms: [], messages: [] };
     let errorMsg = '';
     try {
         rooms = await fetchFromDjango('api/rooms/');
