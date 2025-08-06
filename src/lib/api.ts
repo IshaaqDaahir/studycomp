@@ -2,13 +2,16 @@ const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
 
 // src/lib/api.ts
 export async function fetchFromDjango(endpoint: string, options: RequestInit = {}) {
+    if (!API_URL) {
+        throw new Error('API_URL is not set. Please check your .env.local and Vercel environment variables.');
+    }
     try {
         const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers: {
-            ...options.headers,
-        },
-        credentials: 'include',
+            ...options,
+            headers: {
+                ...options.headers,
+            },
+            credentials: 'include',
         });
 
         if (response.status === 204) {
