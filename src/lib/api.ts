@@ -1,4 +1,4 @@
-const API_URL = process.env.DJANGO_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
 
 // src/lib/api.ts
 export async function fetchFromDjango(endpoint: string, options: RequestInit = {}) {
