@@ -11,11 +11,6 @@ type HomePageProps = {
     searchParams: Promise<{ q?: string }>; 
 };
 
-type Topic = {
-    id: string | number;
-    name: string;
-};
-
 type Message = {
     id: string | number;
     name: string;
