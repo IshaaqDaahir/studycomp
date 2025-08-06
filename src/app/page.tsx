@@ -12,25 +12,47 @@ import ActivityComponent from "../components/activity/ActivityComponent";
     };
 
 export default async function Dashboard({ searchParams }: HomePageProps) {
-    const rooms = await fetchFromDjango('api/rooms/');
-    
+    let rooms = [];
+    let searchResults: any = { rooms: [], messages: [] };
+    let errorMsg = '';
+    try {
+        rooms = await fetchFromDjango('api/rooms/');
+    } catch (error: unknown) {
+        errorMsg = 'Error fetching rooms.';
+        if (error instanceof Error) {
+            console.error(error.message);
+        } else {
+            console.error(error);
+        }
+    }
+
     const passedQuery = await searchParams;
     const query = passedQuery.q || '';
-    const searchResults = query
-        ? await fetchFromDjango(`api/search/?q=${query}`)
-        : "No room matches your search!";
-    
+    if (query) {
+        try {
+            searchResults = await fetchFromDjango(`api/search/?q=${query}`);
+        } catch (error: unknown) {
+            errorMsg = 'Error fetching search results.';
+            if (error instanceof Error) {
+                console.error(error.message);
+            } else {
+                console.error(error);
+            }
+            searchResults = { rooms: [], messages: [] };
+        }
+    } else {
+        searchResults = { rooms: [], messages: [] };
+    }
+
     return(
         <Suspense fallback={<div>Loading dashboard...</div>}>
             <div><NavBar /></div>
             <main className="layout layout--3">
                 <div className="container">
-                
                 {/* Topics Component with search results */}
                 <Suspense fallback={<div>Loading topics...</div>}>
                     <div><TopicsComponent searchParams={searchParams} /></div>
                 </Suspense>
-                    
                 {/* Room List Start */}
                 <div className="roomList">
                     <div className="mobile-menu">
@@ -55,6 +77,7 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
                         <div>
                             <h2>Study Room</h2>
                             <p>{query ? `${searchResults?.rooms.length} Rooms available for ${query}` : `${rooms.length} Rooms available`}</p>
+                            {errorMsg && <span style={{ color: 'red' }}>{errorMsg}</span>}
                         </div>
 
                         {query ? '' : <Link className="btn btn--main" href="/create-room">
