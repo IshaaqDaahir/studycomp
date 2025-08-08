@@ -29,8 +29,8 @@ export default async function TopicsComponent({ searchParams }: TopicsComponentP
     ]);
 
     // Handle search results or normal data
-    const displayRooms = rooms?.rooms || [];
-    const displayTopics =  topics?.topics || [];
+    const displayRooms = query ? rooms?.rooms || [] : rooms;
+    const displayTopics = query ? topics?.topics || [] : topics;
 
     // Calculate room counts for each topic
     const topicCounts: TopicCounts = {};
