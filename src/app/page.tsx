@@ -21,51 +21,52 @@ type Message = {
 }; 
 
 type Room = {
-        id: string | number;
-        host: {id: string | number, avatar: string, username: string};
-        participants: {length: number};
-        topic: {name: string};
-        created: string;
-        name: string;
-    };
+    id: string | number;
+    host: {id: string | number, avatar: string, username: string};
+    participants: {length: number};
+    topic: {name: string};
+    created: string;
+    name: string;
+};
+
+type Topic = {
+    id: string | number;
+    name: string;
+};
 
 export default async function Dashboard({ searchParams }: HomePageProps) {
     let rooms: Room[] = [];
-    let searchResults: { rooms: Room[]; messages: Message[] } = { rooms: [], messages: [] };
+    let topics: Topic[] = [];
+    let searchResults: { rooms: Room[]; messages: Message[]; topics?: Topic[] } = { 
+        rooms: [], 
+        messages: [], 
+        topics: [] 
+    };
     let errorMsg = '';
     
-    try {
-        const response = await fetchFromDjango('api/rooms/');
-        rooms = Array.isArray(response) ? response : [];
-    } catch (error: unknown) {
-        errorMsg = 'Error fetching rooms.';
-        if (error instanceof Error) {
-            console.error(error.message);
-        } else {
-            console.error(error);
-        }
-    }
-
     const passedQuery = await searchParams;
     const query = passedQuery.q || '';
-    
-    if (query) {
-        try {
+
+    // Fetch all data in parallel where possible
+    try {
+        if (query) {
+            // Single fetch for search results
             const searchData = await fetchFromDjango(`api/search/?q=${query}`);
-            if (searchData && typeof searchData === 'object') {
-                searchResults = {
-                    rooms: Array.isArray(searchData.rooms) ? searchData.rooms : [],
-                    messages: Array.isArray(searchData.messages) ? searchData.messages : []
-                };
-            }
-        } catch (error: unknown) {
-            errorMsg = 'Error fetching search results.';
-            if (error instanceof Error) {
-                console.error(error.message);
-            } else {
-                console.error(error);
-            }
+            searchResults = {
+                rooms: Array.isArray(searchData?.rooms) ? searchData.rooms : [],
+                messages: Array.isArray(searchData?.messages) ? searchData.messages : [],
+                topics: Array.isArray(searchData?.topics) ? searchData.topics : []
+            };
+        } else {
+            // Parallel fetches for initial data
+            [rooms, topics] = await Promise.all([
+                fetchFromDjango('api/rooms/').then(res => Array.isArray(res) ? res : []),
+                fetchFromDjango('api/topics/').then(res => Array.isArray(res) ? res : [])
+            ]);
         }
+    } catch (error: unknown) {
+        errorMsg = query ? 'Error fetching search results.' : 'Error fetching initial data.';
+        console.error(errorMsg, error);
     }
 
     return(
@@ -73,10 +74,15 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
             <div><NavBar /></div>
             <main className="layout layout--3">
                 <div className="container">
-                {/* Topics Component with search results */}
-                <Suspense fallback={<div>Loading topics...</div>}>
-                    <div><TopicsComponent searchParams={searchParams} /></div>
-                </Suspense>
+                {/* Topics Component */}
+                <div>
+                    <TopicsComponent 
+                        topics={query ? searchResults.topics || [] : topics}
+                        rooms={query ? searchResults.rooms : rooms}
+                        query={query}
+                    />
+                </div>
+                
                 {/* Room List Start */}
                 <div className="roomList">
                     <div className="mobile-menu">
@@ -100,11 +106,16 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
                     <div className="roomList__header">
                         <div>
                             <h2>Study Room</h2>
-                            <p>{query ? `${searchResults.rooms.length} Rooms available for ${query}` : `${rooms.length} Rooms available`}</p>
+                            <p>
+                                {query 
+                                    ? `${searchResults.rooms.length} Rooms available for ${query}` 
+                                    : `${rooms.length} Rooms available`
+                                }
+                            </p>
                             {errorMsg && <span style={{ color: 'red' }}>{errorMsg}</span>}
                         </div>
 
-                        {!query && rooms.length === 0 && (
+                        {!query && (
                             <Link className="btn btn--main" href="/create-room">
                                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                                 <title>add</title>
@@ -112,36 +123,28 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
                                     d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z"
                                 ></path>
                                 </svg>
-                                Create First Room
-                            </Link>
-                        )}
-                        {!query && rooms.length > 0 && (
-                            <Link className="btn btn--main" href="/create-room">
-                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                <title>add</title>
-                                <path
-                                    d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z"
-                                ></path>
-                                </svg>
-                                Create Room
+                                {rooms.length === 0 ? 'Create First Room' : 'Create Room'}
                             </Link>
                         )}
                     </div>
 
-                    {/* Feed Component with search results */}
-                    <Suspense fallback={<div>Loading rooms...</div>}>
-                        <div><FeedComponent roomsList={searchResults.rooms} query={query} /></div>
-                    </Suspense>
+                    {/* Feed Component */}
+                    <div>
+                        <FeedComponent 
+                            roomsList={query ? searchResults.rooms : rooms} 
+                            query={query} 
+                        />
+                    </div>
                 </div>
                 {/* Room List End */}
 
-                {/* Activity Component with search results */}
-                <Suspense fallback={<div>Loading messages...</div>}>
-                    <div><ActivityComponent 
+                {/* Activity Component */}
+                <div>
+                    <ActivityComponent 
                         messageList={searchResults.messages}
-                        query={query} />
-                    </div>
-                </Suspense>
+                        query={query} 
+                    />
+                </div>
                 </div>
             </main>
         </Suspense>

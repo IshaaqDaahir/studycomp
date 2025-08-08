@@ -1,64 +1,29 @@
 import Link from "next/link";
-import { fetchFromDjango } from "@/lib/api";
 
 // Types Declaration
-    type Topic = {
-        id: string | number;
-        name: string;
-    };
+type Topic = {
+    id: string | number;
+    name: string;
+};
 
-    type TopicCounts = {
-        [key: string]: number;
-    };
+type TopicCounts = {
+    [key: string]: number;
+};
 
-    type Room = {
-        topic?: {name: string};
-    };
-    type TopicsComponentProps = {
-        searchParams: Promise<{ q?: string }>; 
-    };
+type Room = {
+    topic?: {name: string};
+};
 
-export default async function TopicsComponent({ searchParams }: TopicsComponentProps) {
-    const passedQuery = await searchParams;
-    const query = passedQuery.q;
+type TopicsComponentProps = {
+    topics: Topic[];
+    rooms: Room[];
+    query?: string;
+};
 
-    let displayTopics: Topic[] = [];
-    let displayRooms: Room[] = [];
-    let topicsError = false;
-    
-    try {
-        const [topicsResponse, roomsResponse] = await Promise.allSettled([
-            fetchFromDjango(query ? `api/search/?q=${query}` : 'api/topics/'),
-            fetchFromDjango(query ? `api/search/?q=${query}` : 'api/rooms/')
-        ]);
-
-        // Handle topics response
-        if (topicsResponse.status === 'fulfilled') {
-            if (query) {
-                displayTopics = topicsResponse.value?.topics ? topicsResponse.value.topics : [];
-            } else {
-                displayTopics = Array.isArray(topicsResponse.value) ? topicsResponse.value : [];
-            }
-        } else {
-            topicsError = true;
-        }
-
-        // Handle rooms response
-        if (roomsResponse.status === 'fulfilled') {
-            if (query) {
-                displayRooms = roomsResponse.value?.rooms ? roomsResponse.value.rooms : [];
-            } else {
-                displayRooms = Array.isArray(roomsResponse.value) ? roomsResponse.value : [];
-            }
-        }
-    } catch (error) {
-        topicsError = true;
-        console.error('Topics fetch error:', error);
-    }
-
+export default function TopicsComponent({ topics, rooms, query }: TopicsComponentProps) {
     // Calculate room counts for each topic
     const topicCounts: TopicCounts = {};
-    displayRooms.forEach((room: Room) => {
+    rooms.forEach((room: Room) => {
         const topicName = room.topic?.name;
         if (topicName) {
             topicCounts[topicName] = (topicCounts[topicName] || 0) + 1;
@@ -68,14 +33,14 @@ export default async function TopicsComponent({ searchParams }: TopicsComponentP
     // Remove duplicate topics and filter by search if needed
     const uniqueTopics = [
         ...new Map(
-            displayTopics
-                .filter((topic: Topic) => !query || topic.name.toLowerCase().includes(query.toLowerCase()))
-                .map((topic: Topic) => [topic.name, topic])
+            topics
+                .filter(topic => !query || topic.name.toLowerCase().includes(query.toLowerCase()))
+                .map(topic => [topic.name, topic])
         ).values()
     ] as Topic[];
 
     // Empty state
-    if (topicsError || uniqueTopics.length === 0) {
+    if (uniqueTopics.length === 0) {
         return (
             <div className="topics">
                 <div className="topics__header">
@@ -95,13 +60,20 @@ export default async function TopicsComponent({ searchParams }: TopicsComponentP
             </div>
             <ul className="topics__list">
                 <li>
-                    <Link href="/" className={!query ? `active` : ''}>All <span>{displayRooms.length}</span></Link>
+                    <Link href="/" className={!query ? `active` : ''}>
+                        All <span>{rooms.length}</span>
+                    </Link>
                 </li>
 
-                {uniqueTopics.map((topic: Topic) => (
+                {uniqueTopics.map(topic => (
                     <li key={topic.id}>
-                        <Link href={`/?q=${topic.name.toLocaleLowerCase()}`} 
-                        className={query === topic.name ? 'active' : ''}>{topic.name}<span>{topicCounts[topic.name] || 0}</span></Link>
+                        <Link 
+                            href={`/?q=${topic.name.toLowerCase()}`} 
+                            className={query === topic.name ? 'active' : ''}
+                        >
+                            {topic.name}
+                            <span>{topicCounts[topic.name] || 0}</span>
+                        </Link>
                     </li>
                 ))}
             </ul>
