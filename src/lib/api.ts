@@ -49,7 +49,7 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
             }
 
             return data;
-        } catch (jsonError) {
+        } catch {
             // JSON parsing failed - throw with server response snippet
             throw new Error(`Invalid JSON response: ${responseText.slice(0, 100)}...`);
         }
