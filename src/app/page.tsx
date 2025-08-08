@@ -33,8 +33,10 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
     let rooms: Room[] = [];
     let searchResults: { rooms: Room[]; messages: Message[] } = { rooms: [], messages: [] };
     let errorMsg = '';
+    
     try {
-        rooms = await fetchFromDjango('api/rooms/');
+        const response = await fetchFromDjango('api/rooms/');
+        rooms = Array.isArray(response) ? response : [];
     } catch (error: unknown) {
         errorMsg = 'Error fetching rooms.';
         if (error instanceof Error) {
@@ -46,9 +48,16 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
 
     const passedQuery = await searchParams;
     const query = passedQuery.q || '';
+    
     if (query) {
         try {
-            searchResults = await fetchFromDjango(`api/search/?q=${query}`);
+            const searchData = await fetchFromDjango(`api/search/?q=${query}`);
+            if (searchData && typeof searchData === 'object') {
+                searchResults = {
+                    rooms: Array.isArray(searchData.rooms) ? searchData.rooms : [],
+                    messages: Array.isArray(searchData.messages) ? searchData.messages : []
+                };
+            }
         } catch (error: unknown) {
             errorMsg = 'Error fetching search results.';
             if (error instanceof Error) {
@@ -56,10 +65,7 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
             } else {
                 console.error(error);
             }
-            searchResults = { rooms: [], messages: [] };
         }
-    } else {
-        searchResults = { rooms: [], messages: [] };
     }
 
     return(
@@ -94,24 +100,37 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
                     <div className="roomList__header">
                         <div>
                             <h2>Study Room</h2>
-                            <p>{query ? `${searchResults?.rooms.length} Rooms available for ${query}` : `${rooms.length} Rooms available`}</p>
+                            <p>{query ? `${searchResults.rooms.length} Rooms available for ${query}` : `${rooms.length} Rooms available`}</p>
                             {errorMsg && <span style={{ color: 'red' }}>{errorMsg}</span>}
                         </div>
 
-                        {query ? '' : <Link className="btn btn--main" href="/create-room">
-                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                            <title>add</title>
-                            <path
-                                d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z"
-                            ></path>
-                            </svg>
-                            Create Room
-                        </Link>}
+                        {!query && rooms.length === 0 && (
+                            <Link className="btn btn--main" href="/create-room">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                                <title>add</title>
+                                <path
+                                    d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z"
+                                ></path>
+                                </svg>
+                                Create First Room
+                            </Link>
+                        )}
+                        {!query && rooms.length > 0 && (
+                            <Link className="btn btn--main" href="/create-room">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                                <title>add</title>
+                                <path
+                                    d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z"
+                                ></path>
+                                </svg>
+                                Create Room
+                            </Link>
+                        )}
                     </div>
 
                     {/* Feed Component with search results */}
                     <Suspense fallback={<div>Loading rooms...</div>}>
-                        <div><FeedComponent roomsList={searchResults?.rooms} query={query} /></div>
+                        <div><FeedComponent roomsList={searchResults.rooms} query={query} /></div>
                     </Suspense>
                 </div>
                 {/* Room List End */}
@@ -119,7 +138,7 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
                 {/* Activity Component with search results */}
                 <Suspense fallback={<div>Loading messages...</div>}>
                     <div><ActivityComponent 
-                        messageList={searchResults?.messages || []}
+                        messageList={searchResults.messages}
                         query={query} />
                     </div>
                 </Suspense>

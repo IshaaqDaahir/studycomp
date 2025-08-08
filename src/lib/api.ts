@@ -14,8 +14,13 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
             credentials: 'include',
         });
 
-        if (response.status === 204) {
-            return null;
+        // Check for HTML responses
+        const contentType = response.headers.get('content-type');
+        if (contentType?.includes('text/html')) {
+          const text = await response.text();
+          if (text.startsWith('<!DOCTYPE html>')) {
+            throw new Error('Backend returned HTML instead of JSON');
+          }
         }
 
         const text = await response.text();

@@ -22,15 +22,39 @@ export default async function TopicsComponent({ searchParams }: TopicsComponentP
     const passedQuery = await searchParams;
     const query = passedQuery.q;
 
-    // Fetch both topics and rooms
-    const [topics, rooms] = await Promise.all([
-        fetchFromDjango(query ? `api/search/?q=${query}` : 'api/topics/'),
-        fetchFromDjango(query ? `api/search/?q=${query}` : 'api/rooms/')
-    ]);
+    let displayTopics: Topic[] = [];
+    let displayRooms: Room[] = [];
+    let topicsError = false;
+    
+    try {
+        const [topicsResponse, roomsResponse] = await Promise.allSettled([
+            fetchFromDjango(query ? `api/search/?q=${query}` : 'api/topics/'),
+            fetchFromDjango(query ? `api/search/?q=${query}` : 'api/rooms/')
+        ]);
 
-    // Handle search results or normal data
-    const displayRooms = query ? rooms?.rooms || [] : rooms;
-    const displayTopics = query ? topics?.topics || [] : topics;
+        // Handle topics response
+        if (topicsResponse.status === 'fulfilled') {
+            if (query) {
+                displayTopics = topicsResponse.value?.topics ? topicsResponse.value.topics : [];
+            } else {
+                displayTopics = Array.isArray(topicsResponse.value) ? topicsResponse.value : [];
+            }
+        } else {
+            topicsError = true;
+        }
+
+        // Handle rooms response
+        if (roomsResponse.status === 'fulfilled') {
+            if (query) {
+                displayRooms = roomsResponse.value?.rooms ? roomsResponse.value.rooms : [];
+            } else {
+                displayRooms = Array.isArray(roomsResponse.value) ? roomsResponse.value : [];
+            }
+        }
+    } catch (error) {
+        topicsError = true;
+        console.error('Topics fetch error:', error);
+    }
 
     // Calculate room counts for each topic
     const topicCounts: TopicCounts = {};
@@ -49,6 +73,20 @@ export default async function TopicsComponent({ searchParams }: TopicsComponentP
                 .map((topic: Topic) => [topic.name, topic])
         ).values()
     ] as Topic[];
+
+    // Empty state
+    if (topicsError || uniqueTopics.length === 0) {
+        return (
+            <div className="topics">
+                <div className="topics__header">
+                    <h2>{query ? `No topics found for "${query}"` : "No Topics Yet"}</h2>
+                </div>
+                <div className="empty-topics">
+                    <p>Be the first to create a topic!</p>
+                </div>
+            </div>
+        );
+    }
 
     return(
         <div className="topics">
