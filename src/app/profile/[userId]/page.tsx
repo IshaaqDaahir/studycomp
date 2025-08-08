@@ -8,13 +8,36 @@ import { fetchFromDjango } from "@/lib/api";
 import UserActivityComponent from "@/components/user-activity/UserActivityComponent";
 
 type ProfilePageProps = {
-        params: Promise<{ userId: string | number }>; 
-    };
+    params: Promise<{ userId: string | number }>; 
+};
+
+type Topic = {
+    id: string | number;
+    name: string;
+};
+
+type Room = {
+    topic?: {name: string};
+};
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
     const {userId} = await params;
 
+    // Fetch user data
     const user = await fetchFromDjango(`api/users/${userId}/`);
+
+    // Fetch topics and rooms for the sidebar
+    let topics: Topic[] = [];
+    let rooms: Room[] = [];
+    
+    try {
+        [topics, rooms] = await Promise.all([
+            fetchFromDjango('api/topics/').then(res => Array.isArray(res) ? res : []),
+            fetchFromDjango('api/rooms/').then(res => Array.isArray(res) ? res : [])
+        ]);
+    } catch (error) {
+        console.error("Error fetching sidebar data:", error);
+    }
 
     return (
         <Suspense fallback={<div>Loading profile...</div>}>
@@ -23,7 +46,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 <main className="profile-page layout layout--3">
                     <div className="container">
                     {/* Topics Start */}
-                    <div><TopicsComponent searchParams={Promise.resolve({})}/></div>
+                    <div>
+                        <TopicsComponent 
+                            topics={topics}
+                            rooms={rooms}
+                        />
+                    </div>
                     {/* Topics End */}
 
                     {/* Room List Start */}
