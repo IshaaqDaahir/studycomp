@@ -2,7 +2,7 @@ const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
 
 export async function fetchFromDjango(endpoint: string, options: RequestInit = {}) {
     if (!API_URL) {
-        throw new Error('API_URL is not set. Please check your .env.local and Vercel environment variables.');
+        throw new Error('API_URL is not set. Please check your environment variables.');
     }
     
     try {
@@ -14,36 +14,52 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
             credentials: 'include',
         });
 
-        // Read response body once as text
+        // Read response as text first
         const responseText = await response.text();
 
-        // Check for HTML responses
-        if (responseText.startsWith('<!DOCTYPE html>')) {
-            throw new Error('Backend returned HTML instead of JSON');
+        // Detect HTML responses more robustly
+        const isHtml = /^\s*<(!DOCTYPE|html|body)/i.test(responseText);
+        if (isHtml) {
+            // Extract status text for better error messages
+            const statusText = response.statusText || 'Unknown Error';
+            throw new Error(`Backend returned HTML (${response.status} ${statusText}): ${responseText.slice(0, 100)}...`);
         }
 
-        // Parse response text if it exists
-        const data = responseText ? JSON.parse(responseText) : {};
-
-        if (!response.ok) {
-            // Handle Django validation errors
-            if (response.status === 400 && typeof data === 'object') {
-                return Promise.reject(data);
+        // Handle empty responses
+        if (!responseText.trim()) {
+            if (response.ok) {
+                return null; // Successful empty response
             }
-            
-            // Use server error message if available
-            const errorMessage = data.error || data.detail || 'Request failed';
-            throw new Error(`${errorMessage} (${response.status})`);
+            throw new Error(`Empty response from server (${response.status})`);
         }
 
-        return data;
-    } catch (error: unknown) {
-        // Wrap network errors
-        if (error instanceof Error) {
-            throw new Error(error.message || 'Network request failed');
-        } else {
-            throw new Error('Network request failed');
+        // Attempt to parse as JSON
+        try {
+            const data = JSON.parse(responseText);
+
+            if (!response.ok) {
+                // Handle Django validation errors
+                if (response.status === 400 && typeof data === 'object') {
+                    return Promise.reject(data);
+                }
+                
+                // Use server error message if available
+                const errorMessage = data.error || data.detail || 'Request failed';
+                throw new Error(`${errorMessage} (${response.status})`);
+            }
+
+            return data;
+        } catch (jsonError) {
+            // JSON parsing failed - throw with server response snippet
+            throw new Error(`Invalid JSON response: ${responseText.slice(0, 100)}...`);
         }
+    } catch (error: unknown) {
+        // Improve error messages
+        if (error instanceof Error) {
+            // Preserve original error message
+            throw error;
+        }
+        throw new Error('Network request failed');
     }
 }
 
