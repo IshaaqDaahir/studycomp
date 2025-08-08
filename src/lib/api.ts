@@ -1,10 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_DJANGO_API_URL;
 
-// src/lib/api.ts
 export async function fetchFromDjango(endpoint: string, options: RequestInit = {}) {
     if (!API_URL) {
         throw new Error('API_URL is not set. Please check your .env.local and Vercel environment variables.');
     }
+    
     try {
         const response = await fetch(`${API_URL}${endpoint}`, {
             ...options,
@@ -14,29 +14,26 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
             credentials: 'include',
         });
 
+        // Read response body once as text
+        const responseText = await response.text();
+
         // Check for HTML responses
-        const contentType = response.headers.get('content-type');
-        if (contentType?.includes('text/html')) {
-          const text = await response.text();
-          if (text.startsWith('<!DOCTYPE html>')) {
+        if (responseText.startsWith('<!DOCTYPE html>')) {
             throw new Error('Backend returned HTML instead of JSON');
-          }
         }
 
-        const text = await response.text();
-        const data = text ? JSON.parse(text) : {};
+        // Parse response text if it exists
+        const data = responseText ? JSON.parse(responseText) : {};
 
         if (!response.ok) {
             // Handle Django validation errors
             if (response.status === 400 && typeof data === 'object') {
-                // Return the error object directly
                 return Promise.reject(data);
             }
             
             // Use server error message if available
             const errorMessage = data.error || data.detail || 'Request failed';
             throw new Error(`${errorMessage} (${response.status})`);
-
         }
 
         return data;
