@@ -6,7 +6,8 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
     }
     
     try {
-        const response = await fetch(`${API_URL}${endpoint}`, {
+        const url = new URL(endpoint, API_URL).toString();
+        const response = await fetch(url, {
             ...options,
             headers: {
                 ...options.headers,
