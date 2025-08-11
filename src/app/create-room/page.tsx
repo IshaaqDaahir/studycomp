@@ -4,13 +4,17 @@ import { fetchFromDjango } from "@/lib/api";
 export default async function CreateRoomComponent() {
   let topics = [];
   try {
-    topics = await fetchFromDjango('api/topics/');
+    const response = await fetchFromDjango('api/topics/');
+
+    // Handle both array and paginated responses
+    topics = Array.isArray(response) 
+      ? response 
+      : response?.results || [];
+
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error('Error fetching topics:', error.message);
-    } else {
-      console.error('Error fetching topics:', error);
-    }
+    console.error('Error fetching topics:', 
+      error instanceof Error ? error.message : error
+    );
   }
   return <RoomFormComponent topics={topics} />;
 }

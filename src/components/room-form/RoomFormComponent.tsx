@@ -24,15 +24,19 @@ type RoomFormProps = {
 export default function RoomFormComponent({ topics, room }: RoomFormProps) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [availableTopics, setAvailableTopics] = useState<Topic[]>([]);
 
     // Initialize form with room data if editing
     useEffect(() => {
+        // Ensure topics is always an array
+        setAvailableTopics(Array.isArray(topics) ? topics : []);
+
         if (room) {
             (document.querySelector('input[name="room-name"]') as HTMLInputElement).value = room.name;
             (document.querySelector('textarea[name="room-description"]') as HTMLTextAreaElement).value = room.description || '';
             (document.querySelector('input[name="room-topic"]') as HTMLInputElement).value = room.topic.name;
         }
-    }, [room]);
+    }, [room, topics]);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -86,10 +90,14 @@ export default function RoomFormComponent({ topics, room }: RoomFormProps) {
                 });
             }
 
-            // Check for successful response (2xx status)
-            if (response) {
-                router.push(room ? `/room/${room.id}/` : `/room/${response.id}/`);
+            // Handle response (could be object or array)
+            const createdRoom = Array.isArray(response) ? response[0] : response;
+            
+            if (createdRoom?.id) {
+                router.push(`/room/${createdRoom.id}/`);
                 router.refresh();
+            } else {
+                throw new Error("Failed to get room ID from response");
             } 
         } catch (error: unknown) {
             const errorMsg = (error instanceof Error) ? error.message : String(error);
@@ -123,7 +131,7 @@ export default function RoomFormComponent({ topics, room }: RoomFormProps) {
                                 <input type="text" name="room-topic" placeholder="Select a topic..." required list="topic-list" defaultValue={room?.topic.name || ''} />
                                 <datalist id="topic-list">
                                     <select id="room_topic">
-                                        {topics.map((topic: Topic) => (
+                                        {availableTopics.map((topic: Topic) => (
                                             <option key={topic.id} value={topic.name}>{topic.name}</option>
                                         ))}
                                     </select>
