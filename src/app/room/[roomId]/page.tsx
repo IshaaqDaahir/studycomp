@@ -15,7 +15,12 @@ import MessageForm from "@/components/message-form/MessageFormComponent";
 
 export default async function RoomPage({ params }: RoomComponentProps) {
     const { roomId } = await params;
-    const  room = await fetchFromDjango(`api/rooms/${roomId}/`);
+    const  roomResponse = await fetchFromDjango(`api/rooms/${roomId}/`);
+
+    // Handle paginated response if needed
+    const room = Array.isArray(roomResponse) 
+        ? roomResponse[0] 
+        : roomResponse;
 
     return (
         <Suspense fallback={<div>Loading room...</div>}>
@@ -86,15 +91,19 @@ export default async function RoomPage({ params }: RoomComponentProps) {
                                         <p>Hosted By</p>
                                         <Link href={`/profile/${room.host.id}/`} className="room__author">
                                             <div className="avatar avatar--small">
-                                                <Image src={room.host.avatar} width={32} height={32} alt="Room Host Avatar" />
+                                                {room.host.avatar &&
+                                                    (<Image src={room.host.avatar} width={32} height={32} alt="Room Host Avatar" />)
+                                                }
                                             </div>
-                                            <span>@{room.host.name}</span>
+                                            <span>@{room.host.username}</span>
                                         </Link>
                                     </div>
                                     <div className="room__details">
                                         {room.description}
                                     </div> 
-                                    <span className="room__topics">{room.topic.name}</span>
+                                    {room.topic && (
+                                        <span className="room__topics">{room.topic.name}</span>
+                                    )}
                                 </div>
 
                                 <RoomConversationComponent currentRoomId={room.id} />

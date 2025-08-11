@@ -52,17 +52,34 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
         if (query) {
             // Single fetch for search results
             const searchData = await fetchFromDjango(`api/search/?q=${query}`);
+
+            // Handle paginated response
             searchResults = {
-                rooms: Array.isArray(searchData?.rooms) ? searchData.rooms : [],
-                messages: Array.isArray(searchData?.messages) ? searchData.messages : [],
-                topics: Array.isArray(searchData?.topics) ? searchData.topics : []
+                rooms: Array.isArray(searchData?.rooms) 
+                    ? searchData.rooms 
+                    : searchData?.rooms?.results || [],
+                messages: Array.isArray(searchData?.messages) 
+                    ? searchData.messages 
+                    : searchData?.messages?.results || [],
+                topics: Array.isArray(searchData?.topics) 
+                    ? searchData.topics 
+                    : searchData?.topics?.results || []
             };
         } else {
-            // Parallel fetches for initial data
-            [rooms, topics] = await Promise.all([
-                fetchFromDjango('api/rooms/').then(res => Array.isArray(res) ? res : []),
-                fetchFromDjango('api/topics/').then(res => Array.isArray(res) ? res : [])
+            // Fetch rooms and topics
+            const [roomsResponse, topicsResponse] = await Promise.all([
+                fetchFromDjango('api/rooms/'),
+                fetchFromDjango('api/topics/')
             ]);
+
+            // Handle paginated responses
+            rooms = Array.isArray(roomsResponse) 
+                ? roomsResponse 
+                : roomsResponse?.results || [];
+                
+            topics = Array.isArray(topicsResponse) 
+                ? topicsResponse 
+                : topicsResponse?.results || [];
         }
     } catch (error: unknown) {
         errorMsg = query ? 'Error fetching search results.' : 'Error fetching initial data.';
