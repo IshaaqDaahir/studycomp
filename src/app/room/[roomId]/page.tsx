@@ -13,14 +13,6 @@ import MessageForm from "@/components/message-form/MessageFormComponent";
         params: Promise<{ roomId: number | string }>;
     };
 
-// Type for paginated response
-type PaginatedResponse<T> = {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: T[];
-};
-
 export default async function RoomPage({ params }: RoomComponentProps) {
     const { roomId } = await params;
     const  roomResponse = await fetchFromDjango(`api/rooms/${roomId}/`);

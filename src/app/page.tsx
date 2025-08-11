@@ -34,14 +34,6 @@ type Topic = {
     name: string;
 };
 
-// Type for paginated response
-type PaginatedResponse<T> = {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: T[];
-};
-
 export default async function Dashboard({ searchParams }: HomePageProps) {
     let rooms: Room[] = [];
     let topics: Topic[] = [];
