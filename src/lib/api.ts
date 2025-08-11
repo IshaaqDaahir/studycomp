@@ -6,7 +6,10 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
     }
     
     try {
-        const url = new URL(endpoint, API_URL).toString();
+        // Ensure API_URL ends with a slash
+        const baseUrl = API_URL.endsWith('/') ? API_URL : `${API_URL}/`;
+        const url = new URL(endpoint, baseUrl).toString();
+        
         const response = await fetch(url, {
             ...options,
             headers: {
@@ -18,18 +21,10 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
         // Read response as text first
         const responseText = await response.text();
 
-        // Detect HTML responses more robustly
-        const isHtml = /^\s*<(!DOCTYPE|html|body)/i.test(responseText);
-        if (isHtml) {
-            // Extract status text for better error messages
-            const statusText = response.statusText || 'Unknown Error';
-            throw new Error(`Backend returned HTML (${response.status} ${statusText}): ${responseText.slice(0, 100)}...`);
-        }
-
         // Handle empty responses
         if (!responseText.trim()) {
             if (response.ok) {
-                return null; // Successful empty response
+                return null;
             }
             throw new Error(`Empty response from server (${response.status})`);
         }
@@ -39,25 +34,24 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
             const data = JSON.parse(responseText);
 
             if (!response.ok) {
-                // Handle Django validation errors
                 if (response.status === 400 && typeof data === 'object') {
                     return Promise.reject(data);
                 }
                 
-                // Use server error message if available
                 const errorMessage = data.error || data.detail || 'Request failed';
                 throw new Error(`${errorMessage} (${response.status})`);
             }
 
             return data;
         } catch {
-            // JSON parsing failed - throw with server response snippet
+            // Check if it's HTML
+            if (/^\s*<(!DOCTYPE|html|body)/i.test(responseText)) {
+                throw new Error(`Backend returned HTML (${response.status} ${response.statusText}): ${responseText.slice(0, 100)}...`);
+            }
             throw new Error(`Invalid JSON response: ${responseText.slice(0, 100)}...`);
         }
     } catch (error: unknown) {
-        // Improve error messages
         if (error instanceof Error) {
-            // Preserve original error message
             throw error;
         }
         throw new Error('Network request failed');
