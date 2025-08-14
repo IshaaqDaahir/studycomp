@@ -59,7 +59,7 @@ export default function DeleteRoomMessageComponent({ params }: DeleteRoomMessage
                 router.push(`/room/${message.room.id}/`);
                 router.refresh(); // Optional: refresh to show updated message list
             } else {
-                router.push("/home"); // Fallback if no room info
+                router.push("/"); // Fallback if no room info
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to delete message');
