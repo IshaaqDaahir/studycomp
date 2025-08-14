@@ -55,7 +55,7 @@ export default function DeleteMessageComponent({ params }: DeleteMessageComponen
             });
 
             // Redirect to the home page after successful deletion
-            router.push("/home");
+            router.push("/");
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to delete message');
             setIsDeleting(false);
