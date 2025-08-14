@@ -46,7 +46,7 @@ export default function RegisterPage() {
                 localStorage.setItem('refresh_token', response.refresh);
                 localStorage.setItem('user', JSON.stringify(response.user));
                 
-                // Redirect to home page
+                // Redirect to login page
                 router.push('/login');
             }
         } catch (error: unknown) {
