@@ -17,7 +17,7 @@ import { Suspense } from "react";
         topic?: {name: string};
     };
     type SearchTopicsComponentProps = {
-        searchParams: { q?: string }; 
+        searchParams: Promise<{ q?: string }>; 
     };
 
 export default async function SearchTopicsPage({ searchParams }: SearchTopicsComponentProps) {
