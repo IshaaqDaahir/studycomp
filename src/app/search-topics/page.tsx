@@ -20,7 +20,7 @@ import { Suspense } from "react";
         searchParams: { q?: string }; 
     };
 
-export default async function SearchTopicsComponent({ searchParams }: SearchTopicsComponentProps) {
+export default async function SearchTopicsPage({ searchParams }: SearchTopicsComponentProps) {
     const passedQuery = await searchParams;
     const query = passedQuery.q;
 
