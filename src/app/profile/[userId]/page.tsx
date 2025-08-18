@@ -45,60 +45,60 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 <div><NavBar /></div>
                 <main className="profile-page layout layout--3">
                     <div className="container">
-                    {/* Topics Start */}
-                    <div>
-                        <TopicsComponent 
-                            topics={topics}
-                            rooms={rooms}
-                        />
-                    </div>
-                    {/* Topics End */}
+                        {/* Topics Start */}
+                        <div>
+                            <TopicsComponent 
+                                topics={topics}
+                                rooms={rooms}
+                            />
+                        </div>
+                        {/* Topics End */}
 
-                    {/* Room List Start */}
-                    <div className="roomList">
-                        <div className="profile">
-                            <div className="profile__avatar">
-                                <div className="avatar avatar--large active">
-                                    <Image
-                                        src={`http://localhost:8000${user.avatar}`}
-                                        alt="Avatar"
-                                        width={100}
-                                        height={100}
-                                        unoptimized={true} // Required for localhost in development
-                                    />
+                        {/* Room List Start */}
+                        <div className="roomList">
+                            <div className="profile">
+                                <div className="profile__avatar">
+                                    <div className="avatar avatar--large active">
+                                        <Image
+                                            src={`http://localhost:8000${user.avatar}`}
+                                            alt="Avatar"
+                                            width={100}
+                                            height={100}
+                                            unoptimized={true} // Required for localhost in development
+                                        />
+                                    </div>
+                                </div>
+                                <div className="profile__info">
+                                    <h3>{user.username}</h3>
+                                    <p>@{user.username}</p>
+
+                                    {/* {% if request.user == user %} */}
+                                    <Link href="/update-user" className="btn btn--main btn--pill">Edit Profile</Link>
+                                    {/* {% endif %} */}
+
+                                </div>
+                                <div className="profile__about">
+                                    <h3>About</h3>
+                                    <p>
+                                    {user.bio || "No bio available."}
+                                    </p>
                                 </div>
                             </div>
-                            <div className="profile__info">
-                                <h3>{user.username}</h3>
-                                <p>@{user.username}</p>
 
-                                {/* {% if request.user == user %} */}
-                                <Link href="/update-user" className="btn btn--main btn--pill">Edit Profile</Link>
-                                {/* {% endif %} */}
-
+                            <div className="roomList__header">
+                            <div>
+                                <h2>Study Rooms Hosted by {user.username}
+                                </h2>
                             </div>
-                            <div className="profile__about">
-                                <h3>About</h3>
-                                <p>
-                                {user.bio || "No bio available."}
-                                </p>
                             </div>
-                        </div>
+                            <div><UserFeedComponent currentUserId={userId} /></div>
 
-                        <div className="roomList__header">
-                        <div>
-                            <h2>Study Rooms Hosted by {user.username}
-                            </h2>
                         </div>
-                        </div>
-                        <div><UserFeedComponent currentUserId={userId} /></div>
+                        {/* Room List End */}
 
-                    </div>
-                    {/* Room List End */}
-
-                    {/* < Activities Start */}
-                    <div><UserActivityComponent currentUserId={userId} /></div>
-                    {/* Activities End */}
+                        {/* < Activities Start */}
+                        <div><UserActivityComponent currentUserId={userId} /></div>
+                        {/* Activities End */}
                     </div>
                 </main>
             </div>
