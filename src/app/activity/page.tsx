@@ -3,6 +3,7 @@ import Link from "next/link";
 import { formatDistanceToNow } from 'date-fns';
 import { fetchFromDjango } from "@/lib/api";
 import NavBar from "@/components/navbar/NavBar";
+import { Suspense } from "react";
 
 // Types Declaration
 type Message = {
@@ -62,7 +63,7 @@ export default async function ActivityPage({ searchParams }: ActivityPageProps) 
         : messages;
 
     return (
-        <div>
+        <Suspense fallback={<div>Loading topics...</div>}>
             <div><NavBar /></div>
             <div className="activities__mobile">
                 <div className="activities__header__mobile">
@@ -111,6 +112,6 @@ export default async function ActivityPage({ searchParams }: ActivityPageProps) 
                     <p>No activity found{query ? ` matching "${query}"` : ''}</p>
                 )} 
             </div>
-        </div>
+        </Suspense>
     );
 }

@@ -1,6 +1,7 @@
 import NavBar from "@/components/navbar/NavBar";
 import { fetchFromDjango } from "@/lib/api";
 import Link from "next/link";
+import { Suspense } from "react";
 
 // Types Declaration
 type Topic = {
@@ -101,7 +102,7 @@ export default async function TopicsPage({ searchParams }: TopicsPageProps) {
     }
 
     return(
-        <div>
+        <Suspense fallback={<div>Loading topics...</div>}>
             <div><NavBar /></div>
             <div className="topics__mobile">
                 <div className="topics__header__mobile">
@@ -138,6 +139,6 @@ export default async function TopicsPage({ searchParams }: TopicsPageProps) {
                     )}
                 </div>
             </div>
-        </div>
+        </Suspense>
     );
 }

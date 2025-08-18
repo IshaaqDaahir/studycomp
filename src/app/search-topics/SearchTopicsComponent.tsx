@@ -53,7 +53,7 @@ export default async function SearchTopicsComponent({ searchParams }: SearchTopi
     ] as Topic[];
 
     return (
-        <Suspense fallback={<div>Loading topics...</div>}>
+        <Suspense fallback={<div>Please be patient...</div>}>
             <main className="create-room layout">
                 <div className="container">
                     <div className="layout__box">
