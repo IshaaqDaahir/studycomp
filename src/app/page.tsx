@@ -87,7 +87,7 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
     }
 
     return(
-        <Suspense fallback={<div>Loading dashboard...</div>}>
+        <Suspense fallback={<div>Loading home page...</div>}>
             <div><NavBar /></div>
             <main className="layout layout--3">
                 <div className="container">
