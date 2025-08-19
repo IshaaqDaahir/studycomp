@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { fetchFromDjango } from "@/lib/api";
 
-export default function DeleteRoomComponent() {
+export default function DeleteRoomPage() {
     const router = useRouter();
     const { roomId } = useParams();
     const [roomName, setRoomName] = useState("");

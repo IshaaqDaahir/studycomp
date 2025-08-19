@@ -20,7 +20,7 @@ import { use } from 'react'
         params: Promise<{ msgId: string | number }>; 
     };
 
-export default function DeleteRoomMessageComponent({ params }: DeleteRoomMessageComponentProps) {
+export default function DeleteRoomMessagePage({ params }: DeleteRoomMessageComponentProps) {
     const {msgId} = use(params);
     const [message, setMessage] = useState<Message | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);

@@ -1,7 +1,7 @@
 import RoomFormComponent from "../../components/room-form/RoomFormComponent";
 import { fetchFromDjango } from "@/lib/api";
 
-export default async function CreateRoomComponent() {
+export default async function CreateRoomPage() {
   let topics = [];
   try {
     const response = await fetchFromDjango('api/topics/');

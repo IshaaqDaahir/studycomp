@@ -35,7 +35,7 @@ type EditRoomComponentProps = {
     params: Promise<{ roomId: string }>;
 };
 
-export default function EditRoomComponent({ params }: EditRoomComponentProps) {
+export default function EditRoomPage({ params }: EditRoomComponentProps) {
     const [room, setRoom] = useState<Room | null>(null);
     const [topics, setTopics] = useState<Topic[]>([]);
     const [loading, setLoading] = useState(true);

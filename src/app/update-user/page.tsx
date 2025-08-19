@@ -8,7 +8,7 @@ import { fetchFromDjango } from "@/lib/api";
 import { useAuth } from "@/context/auth";
 import Image from "next/image";
 
-export default function UpdateUserComponent() {
+export default function UpdateUserPage() {
     const router = useRouter();
     const { user: currentUser, updateUser } = useAuth(); // Get updateUser from context
     const [formData, setFormData] = useState({

@@ -34,7 +34,7 @@ type Topic = {
     name: string;
 };
 
-export default async function Dashboard({ searchParams }: HomePageProps) {
+export default async function HomePage({ searchParams }: HomePageProps) {
     let rooms: Room[] = [];
     let topics: Topic[] = [];
     let searchResults: { rooms: Room[]; messages: Message[]; topics?: Topic[] } = { 
