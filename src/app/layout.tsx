@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../../public/styles/style.css"
 import { AuthProvider } from "@/context/auth";
 import Script from 'next/script'
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: "StudyCompanion  | Find study companions around the world!",
@@ -18,6 +19,7 @@ export default function RootLayout({
         <body>
             <AuthProvider>
                 {children}
+                <Analytics />
             </AuthProvider>
             <Script src="/js/script.js"></Script>
         </body>
