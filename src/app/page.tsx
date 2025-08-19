@@ -115,7 +115,7 @@ export default async function Dashboard({ searchParams }: HomePageProps) {
                             </label>
                         </form>
                         <div className="mobile-menuItems">
-                            <Link className="btn btn--main btn--pill" href="/topics">Browse Topics</Link>
+                            <Link className="btn btn--main btn--pill" href="/search-topics">Browse Topics</Link>
                             <Link className="btn btn--main btn--pill" href="/activity">Recent Activities</Link>
                         </div>
                     </div>
