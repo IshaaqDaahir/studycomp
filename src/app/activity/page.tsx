@@ -20,57 +20,18 @@ type ActivityPage = {
     query?: string;      
 };
 
-// Types Declaration
-type ActivityPageProps = {
-    searchParams: Promise<{ q?: string }>; 
-};
-
-export default async function ActivityPage({ searchParams }: ActivityPageProps) {
-    let searchResult: { messages: Message[] } = { 
-            messages: []
-    };
-    let errorMsg = '';
-    
-    const passedQuery = await searchParams;
-    const query = passedQuery.q || '';
-
-    // Fetch all data in parallel where possible
-    try {
-        if (query) {
-            // Single fetch for search results
-            const searchData = await fetchFromDjango(`api/search/?q=${query}`);
-
-            // Handle paginated response
-            searchResult = {
-                messages: Array.isArray(searchData?.messages) 
-                    ? searchData.messages 
-                    : searchData?.messages?.results || [],
-            };
-        }
-    } catch (error: unknown) {
-        errorMsg = query ? 'Error fetching search results.' : 'Error fetching initial data.';
-        console.error(errorMsg, error);
-    }
+export default async function ActivityPage() {
     const messages: Message[] = await fetchFromDjango('api/messages/');
-
-    // Filter messages based on query
-    const filteredMessages = query 
-        ? searchResult.messages.filter(message => 
-            message.body.toLowerCase().includes(query.toLowerCase()) ||
-            message.user.username.toLowerCase().includes(query.toLowerCase()) ||
-            message.room.name.toLowerCase().includes(query.toLowerCase())
-          )
-        : messages;
 
     return (
         <Suspense fallback={<div>Loading topics...</div>}>
             <div><NavBar /></div>
             <div className="activities__mobile">
                 <div className="activities__header__mobile">
-                    <h2>{query ? `Activity for "${query}"` : 'Recent Activities'}</h2>
+                    <h2>Recent Activities</h2>
                 </div>
-                {filteredMessages.length > 0 ? (
-                    filteredMessages.map(message => (
+                {messages.length > 0 ? (
+                    messages.map(message => (
                         <div key={message.id} className="activities__box__mobile">
                             <div className="activities__boxHeader roomListRoom__header">
                                 <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
@@ -109,7 +70,7 @@ export default async function ActivityPage({ searchParams }: ActivityPageProps) 
                         </div>
                     ))
                 ) : (
-                    <p>No activity found{query ? ` matching "${query}"` : ''}</p>
+                    <p>No activity yet go and start a conversation with your buddy!</p>
                 )} 
             </div>
         </Suspense>
