@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { fetchFromDjango } from '@/lib/api';
+import avatar from "../../../public/images/avatar.svg";
 
 // Types Declaration
     type CurrentRoomId = {
@@ -36,7 +37,7 @@ export default async function RoomParticipantsComponent({ currentRoomId }: Curre
                 {participants.map((participant: Room) => (
                     <Link key={participant.id} href={`/profile/${participant.id}/`} className="participant">
                         <div className="avatar avatar--medium">
-                            <Image src={participant.avatar} width={32} height={32} alt="User Avatar" />
+                            <Image src={participant.avatar || avatar} width={32} height={32} alt="User Avatar" />
                         </div>
                         <p>
                             {participant.username}

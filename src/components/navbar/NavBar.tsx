@@ -66,7 +66,7 @@ export default function NavBar(){
                                 <Link href={`/profile/${user?.id}`}>
                                     <div className="avatar avatar--medium active">
                                          <Image
-                                            src={`http://localhost:8000${user?.avatar}`}
+                                            src={user?.avatar || avatar}
                                             alt="Avatar"
                                             width={100}
                                             height={100}

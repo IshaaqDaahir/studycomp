@@ -7,6 +7,7 @@ import { useState } from "react";
 import { fetchFromDjango } from "@/lib/api";
 import { useAuth } from "@/context/auth";
 import Image from "next/image";
+import avatar from "../../../public/images/avatar.svg";
 
 export default function UpdateUserPage() {
     const router = useRouter();
@@ -143,15 +144,13 @@ export default function UpdateUserPage() {
 
                                 <div className="form__group">
                                     <label>Profile Image</label>
-                                    {currentUser?.avatar && (
                                         <Image 
-                                            src={`http://localhost:8000${currentUser.avatar}`}
+                                            src={currentUser?.avatar || avatar}
                                             alt="Existing Image" 
                                             style={{ width: '100px', display: 'block', marginBottom: '10px' }}
                                             width={100}
                                             height={100}
                                         />
-                                    )}
                                     <input
                                         type="file"
                                         name="avatar"

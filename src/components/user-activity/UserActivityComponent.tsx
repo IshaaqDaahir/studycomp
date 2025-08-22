@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
+import avatar from "../../../public/images/avatar.svg";
 
 // Types Declaration
     type CurrentUserId = {
@@ -34,11 +35,10 @@ export default async function UserActivityComponent({ currentUserId }: CurrentUs
                         <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
                             <div className="avatar avatar--small">
                                  <Image
-                                    src={`http://localhost:8000${message.user.avatar}`}
+                                    src={message.user.avatar || avatar}
                                     alt="Avatar"
                                     width={100}
                                     height={100}
-                                    unoptimized={true} // Required for localhost in development
                                 />
                             </div>
                             <p>

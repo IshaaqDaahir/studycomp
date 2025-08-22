@@ -7,6 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
 import RoomConversationComponent from "@/components/room-conversation/RoomConversationComponent";
 import RoomParticipantsComponent from "@/components/room-participants/RoomParticipantsComponent";
 import MessageForm from "@/components/message-form/MessageFormComponent";
+import avatar from "../../../../public/images/avatar.svg";
 
 // Types Declaration
     type RoomComponentProps = {
@@ -91,9 +92,7 @@ export default async function RoomPage({ params }: RoomComponentProps) {
                                         <p>Hosted By</p>
                                         <Link href={`/profile/${room.host.id}/`} className="room__author">
                                             <div className="avatar avatar--small">
-                                                {room.host.avatar &&
-                                                    (<Image src={room.host.avatar} width={32} height={32} alt="Room Host Avatar" />)
-                                                }
+                                                <Image src={room.host.avatar || avatar} width={32} height={32} alt="Room Host Avatar" />
                                             </div>
                                             <span>@{room.host.username}</span>
                                         </Link>

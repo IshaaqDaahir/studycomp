@@ -6,6 +6,7 @@ import NavBar from "../../../components/navbar/NavBar";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
 import UserActivityComponent from "@/components/user-activity/UserActivityComponent";
+import avatar from "../../../../public/images/avatar.svg";
 
 type ProfilePageProps = {
     params: Promise<{ userId: string | number }>; 
@@ -60,11 +61,10 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                 <div className="profile__avatar">
                                     <div className="avatar avatar--large active">
                                         <Image
-                                            src={`http://localhost:8000${user.avatar}`}
+                                            src={user?.avatar || avatar}
                                             alt="Avatar"
                                             width={100}
                                             height={100}
-                                            unoptimized={true} // Required for localhost in development
                                         />
                                     </div>
                                 </div>

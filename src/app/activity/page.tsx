@@ -4,6 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { fetchFromDjango } from "@/lib/api";
 import NavBar from "@/components/navbar/NavBar";
 import { Suspense } from "react";
+import avatar from "../../../public/images/avatar.svg";
 
 // Types Declaration
 type Message = {
@@ -37,11 +38,10 @@ export default async function ActivityPage() {
                                 <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
                                     <div className="avatar avatar--small">
                                         <Image
-                                            src={`http://localhost:8000${message.user.avatar}`}
+                                            src={message.user.avatar || avatar}
                                             alt="Avatar"
                                             width={100}
                                             height={100}
-                                            unoptimized={true}
                                         />
                                     </div>
                                     <p>

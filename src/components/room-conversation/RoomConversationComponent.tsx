@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
+import avatar from "../../../public/images/avatar.svg";
 
 // Types Declaration
     type CurrentRoomId = {
@@ -32,7 +33,7 @@ export default async function RoomConversationComponent({ currentRoomId }: Curre
                             <div className="thread__author">
                                 <Link href={`/profile/${message.user.id}/`} className="thread__authorInfo">
                                     <div className="avatar avatar--small">
-                                        <Image src={message.user.avatar} width={32} height={32} alt="Message User Avatar" />
+                                        <Image src={message.user.avatar || avatar} width={32} height={32} alt="Message User Avatar" />
                                     </div>
                                     <span>@{message.user.username}</span>
                                 </Link>
