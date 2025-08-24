@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         port: "8000",
         pathname: "/media/**",
       },
+      {
+        protocol: "https",
+        hostname: "*.amazonaws.com",
+        pathname: "/**",
+      },
     ],
   },
 };

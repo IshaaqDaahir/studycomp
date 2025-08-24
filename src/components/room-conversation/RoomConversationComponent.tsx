@@ -33,7 +33,7 @@ export default async function RoomConversationComponent({ currentRoomId }: Curre
                             <div className="thread__author">
                                 <Link href={`/profile/${message.user.id}/`} className="thread__authorInfo">
                                     <div className="avatar avatar--small">
-                                        <Image src={message.user.avatar?.startsWith('https://') ? message.user.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${message.user.avatar}` || avatar} width={32} height={32} alt="Message User Avatar" />
+                                        <Image src={message.user.avatar || avatar} width={32} height={32} alt="Message User Avatar" />
                                     </div>
                                     <span>@{message.user.username}</span>
                                 </Link>

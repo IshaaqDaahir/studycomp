@@ -144,7 +144,7 @@ export default function UpdateUserPage() {
                                 <div className="form__group">
                                     <label>Profile Image</label>
                                         <Image 
-                                            src={currentUser?.avatar?.startsWith('https://') ? currentUser.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${currentUser?.avatar}` || avatar}
+                                            src={currentUser?.avatar || avatar}
                                             alt="Current Image" 
                                             style={{ width: '100px', display: 'block', marginBottom: '10px' }}
                                             width={100}
