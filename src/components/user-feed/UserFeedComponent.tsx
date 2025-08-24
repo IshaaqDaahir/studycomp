@@ -32,7 +32,7 @@ export default async function UserFeedComponent({ currentUserId }: CurrentUserId
                         <Link href={`/profile/${room.host.id}/`} className="roomListRoom__author">
                             <div className="avatar avatar--small">
                                 <Image
-                                    src={room.host.avatar?.startsWith('http') ? room.host.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${room.host.avatar}` || avatar}
+                                    src={room.host.avatar?.startsWith('https://') ? room.host.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${room.host.avatar}` || avatar}
                                     alt="Room Host Avatar"
                                     width={100}
                                     height={100}

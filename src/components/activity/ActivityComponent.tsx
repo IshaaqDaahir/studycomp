@@ -43,7 +43,7 @@ export default async function ActivityComponent({ messageList, query }: Activity
                             <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
                                 <div className="avatar avatar--small">
                                      <Image
-                                        src={message.user.avatar?.startsWith('http') ? message.user.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${message.user.avatar}` || avatar}
+                                        src={message.user.avatar?.startsWith('https://') ? message.user.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${message.user.avatar}` || avatar}
                                         alt="Message User Avatar"
                                         width={100}
                                         height={100}

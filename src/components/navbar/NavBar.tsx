@@ -66,7 +66,7 @@ export default function NavBar(){
                                 <Link href={`/profile/${user?.id}`}>
                                     <div className="avatar avatar--medium active">
                                          <Image
-                                            src={user?.avatar?.startsWith('http') ? user.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${user?.avatar}` || avatar}
+                                            src={user?.avatar?.startsWith('https://') ? user.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${user?.avatar}` || avatar}
                                             alt="User Avatar"
                                             width={100}
                                             height={100}
