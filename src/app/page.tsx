@@ -6,6 +6,8 @@ import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
 import ActivityComponent from "../components/activity/ActivityComponent";
 
+export const dynamic = 'force-dynamic';
+
 // Types Declaration
 type HomePageProps = {
     searchParams: Promise<{ q?: string }>; 

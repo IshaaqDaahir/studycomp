@@ -8,6 +8,8 @@ import { fetchFromDjango } from "@/lib/api";
 import UserActivityComponent from "@/components/user-activity/UserActivityComponent";
 import avatar from "../../../../public/images/avatar.svg";
 
+export const dynamic = 'force-dynamic';
+
 type ProfilePageProps = {
     params: Promise<{ userId: string | number }>; 
 };
