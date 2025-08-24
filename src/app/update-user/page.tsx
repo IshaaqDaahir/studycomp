@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import NavBar from "@/components/navbar/NavBar";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { fetchFromDjango } from "@/lib/api";
 import { useAuth } from "@/context/auth";
@@ -10,7 +9,6 @@ import Image from "next/image";
 import avatar from "../../../public/images/avatar.svg";
 
 export default function UpdateUserPage() {
-    const router = useRouter();
     const { user: currentUser, updateUser } = useAuth(); // Get updateUser from context
     const [formData, setFormData] = useState({
         name: currentUser?.name || "",
@@ -65,7 +63,8 @@ export default function UpdateUserPage() {
 
             // Update user in context and local storage
             updateUser(response);
-            router.push(`/profile/${response.id}/`);
+            // Force a hard refresh to update all components
+            window.location.href = `/profile/${response.id}/`;
         } catch (err: unknown) {
             if (err && typeof err === "object" && "message" in err) {
                 setError((err as { message: string }).message);
@@ -145,8 +144,8 @@ export default function UpdateUserPage() {
                                 <div className="form__group">
                                     <label>Profile Image</label>
                                         <Image 
-                                            src={currentUser?.avatar || avatar}
-                                            alt="Existing Image" 
+                                            src={currentUser?.avatar?.startsWith('http') ? currentUser.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${currentUser?.avatar}` || avatar}
+                                            alt="Current Image" 
                                             style={{ width: '100px', display: 'block', marginBottom: '10px' }}
                                             width={100}
                                             height={100}

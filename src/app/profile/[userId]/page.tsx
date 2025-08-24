@@ -61,8 +61,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                 <div className="profile__avatar">
                                     <div className="avatar avatar--large active">
                                         <Image
-                                            src={user?.avatar || avatar}
-                                            alt="Avatar"
+                                            src={user?.avatar?.startsWith('http') ? user.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${user?.avatar}` || avatar}
+                                            alt="User Avatar"
                                             width={100}
                                             height={100}
                                         />

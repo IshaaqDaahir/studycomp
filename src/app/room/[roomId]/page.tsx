@@ -92,7 +92,12 @@ export default async function RoomPage({ params }: RoomComponentProps) {
                                         <p>Hosted By</p>
                                         <Link href={`/profile/${room.host.id}/`} className="room__author">
                                             <div className="avatar avatar--small">
-                                                <Image src={room.host.avatar || avatar} width={32} height={32} alt="Room Host Avatar" />
+                                                <Image 
+                                                    src={room.host.avatar?.startsWith('http') ? room.host.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${room.host.avatar}` || avatar}
+                                                    width={32} 
+                                                    height={32} 
+                                                    alt="Room Host Avatar"
+                                                />
                                             </div>
                                             <span>@{room.host.username}</span>
                                         </Link>

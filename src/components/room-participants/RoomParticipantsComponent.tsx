@@ -37,7 +37,7 @@ export default async function RoomParticipantsComponent({ currentRoomId }: Curre
                 {participants.map((participant: Room) => (
                     <Link key={participant.id} href={`/profile/${participant.id}/`} className="participant">
                         <div className="avatar avatar--medium">
-                            <Image src={participant.avatar || avatar} width={32} height={32} alt="User Avatar" />
+                            <Image src={participant.avatar?.startsWith('http') ? participant.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${participant.avatar}` || avatar} width={32} height={32} alt="Participant Avatar" />
                         </div>
                         <p>
                             {participant.username}

@@ -16,6 +16,7 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
                 ...options.headers,
             },
             credentials: 'include',
+            cache: 'no-store', // Disable caching to always get fresh data
         });
 
         // Read response as text first

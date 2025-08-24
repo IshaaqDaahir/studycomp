@@ -35,8 +35,8 @@ export default async function UserActivityComponent({ currentUserId }: CurrentUs
                         <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
                             <div className="avatar avatar--small">
                                  <Image
-                                    src={message.user.avatar || avatar}
-                                    alt="Avatar"
+                                    src={message.user.avatar?.startsWith('http') ? message.user.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${message.user.avatar}` || avatar}
+                                    alt="Message User Avatar"
                                     width={100}
                                     height={100}
                                 />
