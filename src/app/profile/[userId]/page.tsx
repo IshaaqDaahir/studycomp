@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
 import UserActivityComponent from "@/components/user-activity/UserActivityComponent";
 import avatar from "../../../../public/images/avatar.svg";
+import AuthWrapper from "@/components/AuthWrapper";
 
 export const dynamic = 'force-dynamic';
 
@@ -73,11 +74,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                 <div className="profile__info">
                                     <h3>{user.username}</h3>
                                     <p>@{user.username}</p>
-
-                                    {/* {% if request.user == user %} */}
-                                    <Link href="/update-user" className="btn btn--main btn--pill">Edit Profile</Link>
-                                    {/* {% endif %} */}
-
+                                    <AuthWrapper>
+                                        <Link href="/update-user" className="btn btn--main btn--pill">Edit Profile</Link>
+                                    </AuthWrapper>
                                 </div>
                                 <div className="profile__about">
                                     <h3>About</h3>
