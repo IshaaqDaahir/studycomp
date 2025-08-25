@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
 import avatar from "../../../public/images/avatar.svg";
+import AuthWrapper from "../AuthWrapper";
 
 // Types Declaration
     type CurrentUserId = {
@@ -35,7 +36,7 @@ export default async function UserActivityComponent({ currentUserId }: CurrentUs
                         <Link href={`/profile/${message.user.id}/`} className="roomListRoom__author">
                             <div className="avatar avatar--small">
                                  <Image
-                                    src={message.user.avatar?.startsWith('https://') ? message.user.avatar : `${process.env.NEXT_PUBLIC_DJANGO_API_URL}${message.user.avatar}` || avatar}
+                                    src={ message.user.avatar || avatar}
                                     alt="Message User Avatar"
                                     width={100}
                                     height={100}
@@ -47,18 +48,18 @@ export default async function UserActivityComponent({ currentUserId }: CurrentUs
                             </p>
                         </Link>
 
-                        {/* {% if request.user == message.user %} */}
-                            <div className="roomListRoom__actions">
+                        <div className="roomListRoom__actions">
+                            <AuthWrapper>
                                 <Link href={`/delete-message/${message.id}/`}>
                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                    <title>remove</title>
+                                    <title>Delete Message</title>
                                     <path
                                         d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
                                     ></path>
                                     </svg>
                                 </Link>
-                            </div>
-                        {/* {% endif %} */}
+                            </AuthWrapper>
+                        </div>
                     </div>
                     <div className="activities__boxContent">
                         <p>replied to post in “<Link href={`/room/${message.room.id}/`}>{message.room.name}</Link>”</p>
