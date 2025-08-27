@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchFromDjango } from "@/lib/api";
+import { validateField, validatePasswordMatch } from "@/lib/validation";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -15,7 +16,7 @@ export default function RegisterPage() {
         password1: '',
         password2: ''
     });
-    const [errors, setErrors] = useState<Record<string, string[]>>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -52,22 +53,22 @@ export default function RegisterPage() {
         } catch (error: unknown) {
             if (typeof error === 'object') {
             // Handle Django field errors
-            const djangoErrors: Record<string, string[]> = {};
+            const djangoErrors: Record<string, string> = {};
             
             // Convert Django error format to match our state
             if (error && typeof error === 'object') {
                 for (const [key, value] of Object.entries(error)) {
                     if (Array.isArray(value)) {
-                        djangoErrors[key] = value;
+                        djangoErrors[key] = value.join(', ');
                     } else if (typeof value === 'string') {
-                        djangoErrors[key] = [value];
+                        djangoErrors[key] = value;
                     }
                 }
             }
             
             setErrors(djangoErrors);
         } else {
-                setErrors({ non_field_errors: [error && typeof error === 'object' && 'message' in error && error.message ? String(error.message) : typeof error === 'string' ? error : 'Registration failed'] });
+                setErrors({ non_field_errors: error && typeof error === 'object' && 'message' in error && error.message ? String(error.message) : typeof error === 'string' ? error : 'Registration failed' });
             }
         } finally {
             setIsSubmitting(false);
@@ -88,7 +89,7 @@ export default function RegisterPage() {
 
                         {errors.non_field_errors && (
                             <div className="form__error">
-                                {errors.non_field_errors.join(', ')}
+                                {errors.non_field_errors}
                             </div>
                         )}
 
@@ -102,9 +103,14 @@ export default function RegisterPage() {
                                     placeholder="e.g. Dennis Ivy"
                                     value={formData.name}
                                     onChange={handleChange}
+                                    onBlur={(e) => {
+                                        const error = validateField('name', e.target.value);
+                                        setErrors(prev => ({ ...prev, name: error }));
+                                    }}
+                                    className={errors.name ? 'form__input--error' : ''}
                                     required
                                 />
-                                {errors.name && <span className="form__error-text">{errors.name.join(', ')}</span>}
+                                {errors.name && <span className="form__error-text">{errors.name}</span>}
                             </div>
 
                             <div className="form__group">
@@ -116,9 +122,14 @@ export default function RegisterPage() {
                                     placeholder="e.g. dennis_ivy"
                                     value={formData.username}
                                     onChange={handleChange}
+                                    onBlur={(e) => {
+                                        const error = validateField('username', e.target.value);
+                                        setErrors(prev => ({ ...prev, username: error }));
+                                    }}
+                                    className={errors.username ? 'form__input--error' : ''}
                                     required
                                 />
-                                {errors.username && <span className="form__error-text">{errors.username.join(', ')}</span>}
+                                {errors.username && <span className="form__error-text">{errors.username}</span>}
                             </div>
 
                             <div className="form__group">
@@ -130,9 +141,14 @@ export default function RegisterPage() {
                                     placeholder="e.g. user@example.com"
                                     value={formData.email}
                                     onChange={handleChange}
+                                    onBlur={(e) => {
+                                        const error = validateField('email', e.target.value);
+                                        setErrors(prev => ({ ...prev, email: error }));
+                                    }}
+                                    className={errors.email ? 'form__input--error' : ''}
                                     required
                                 />
-                                {errors.email && <span className="form__error-text">{errors.email.join(', ')}</span>}
+                                {errors.email && <span className="form__error-text">{errors.email}</span>}
                             </div>
 
                             <div className="form__group">
@@ -143,9 +159,15 @@ export default function RegisterPage() {
                                     placeholder="Tell us about yourself..."
                                     value={formData.bio}
                                     onChange={handleChange}
+                                    onBlur={(e) => {
+                                        const error = validateField('bio', e.target.value);
+                                        setErrors(prev => ({ ...prev, bio: error }));
+                                    }}
+                                    className={errors.bio ? 'form__input--error' : ''}
                                     rows={3}
+                                    required
                                 />
-                                {errors.bio && <span className="form__error-text">{errors.bio.join(', ')}</span>}
+                                {errors.bio && <span className="form__error-text">{errors.bio}</span>}
                             </div>
 
                             <div className="form__group">
@@ -157,10 +179,20 @@ export default function RegisterPage() {
                                     placeholder="••••••••"
                                     value={formData.password1}
                                     onChange={handleChange}
+                                    onBlur={(e) => {
+                                        const error = validateField('password1', e.target.value);
+                                        setErrors(prev => ({ ...prev, password1: error }));
+                                        // Also check password match if password2 exists
+                                        if (formData.password2) {
+                                            const matchError = validatePasswordMatch(e.target.value, formData.password2);
+                                            setErrors(prev => ({ ...prev, password2: matchError }));
+                                        }
+                                    }}
+                                    className={errors.password1 ? 'form__input--error' : ''}
                                     required
                                     minLength={8}
                                 />
-                                {errors.password1 && <span className="form__error-text">{errors.password1.join(', ')}</span>}
+                                {errors.password1 && <span className="form__error-text">{errors.password1}</span>}
                             </div>
 
                             <div className="form__group">
@@ -172,10 +204,16 @@ export default function RegisterPage() {
                                     placeholder="••••••••"
                                     value={formData.password2}
                                     onChange={handleChange}
+                                    onBlur={(e) => {
+                                        const error = validateField('password2', e.target.value);
+                                        const matchError = validatePasswordMatch(formData.password1, e.target.value);
+                                        setErrors(prev => ({ ...prev, password2: error || matchError }));
+                                    }}
+                                    className={errors.password2 ? 'form__input--error' : ''}
                                     required
                                     minLength={8}
                                 />
-                                {errors.password2 && <span className="form__error-text">{errors.password2.join(', ')}</span>}
+                                {errors.password2 && <span className="form__error-text">{errors.password2}</span>}
                             </div>
 
                             <button 

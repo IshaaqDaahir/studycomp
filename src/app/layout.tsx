@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../../public/styles/style.css"
+import "../../public/styles/form-validation.css"
 import { AuthProvider } from "@/context/auth";
 import Script from 'next/script'
 import { Analytics } from "@vercel/analytics/next"

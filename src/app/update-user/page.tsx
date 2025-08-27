@@ -7,6 +7,7 @@ import { fetchFromDjango } from "@/lib/api";
 import { useAuth } from "@/context/auth";
 import Image from "next/image";
 import avatar from "../../../public/images/avatar.svg";
+import { validateField } from "@/lib/validation";
 
 export default function UpdateUserPage() {
     const { user: currentUser, updateUser } = useAuth(); // Get updateUser from context
@@ -20,6 +21,7 @@ export default function UpdateUserPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -106,7 +108,15 @@ export default function UpdateUserPage() {
                                         placeholder="Enter your full name"
                                         value={formData.name}
                                         onChange={handleChange}
+                                        onBlur={(e) => {
+                                            const error = validateField('name', e.target.value);
+                                            setFieldErrors(prev => ({ ...prev, name: error }));
+                                        }}
+                                        className={fieldErrors.name ? 'form__input--error' : ''}
                                     />
+                                    {fieldErrors.name && (
+                                        <span className="form__error-text">{fieldErrors.name}</span>
+                                    )}
                                 </div>
 
                                 <div className="form__group">

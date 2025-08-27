@@ -4,6 +4,7 @@ import Link from "next/link";
 import {useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { fetchFromDjango } from "@/lib/api";
+import { validateField } from "@/lib/validation";
 
 // Types Declaration
 type Topic = {
@@ -25,6 +26,7 @@ export default function RoomFormComponent({ topics, room }: RoomFormProps) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [availableTopics, setAvailableTopics] = useState<Topic[]>([]);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     // Initialize form with room data if editing
     useEffect(() => {
@@ -128,7 +130,22 @@ export default function RoomFormComponent({ topics, room }: RoomFormProps) {
                         <form className="form" onSubmit={handleSubmit}>
                             <div className="form__group">
                                 <label>Enter a Topic</label>
-                                <input type="text" name="room-topic" placeholder="Select a topic..." required list="topic-list" defaultValue={room?.topic.name || ''} />
+                                <input 
+                                    type="text" 
+                                    name="room-topic" 
+                                    placeholder="Select a topic..." 
+                                    required 
+                                    list="topic-list" 
+                                    defaultValue={room?.topic.name || ''}
+                                    onBlur={(e) => {
+                                        const error = validateField('room-topic', e.target.value);
+                                        setFieldErrors(prev => ({ ...prev, 'room-topic': error }));
+                                    }}
+                                    className={fieldErrors['room-topic'] ? 'form__input--error' : ''}
+                                />
+                                {fieldErrors['room-topic'] && (
+                                    <span className="form__error-text">{fieldErrors['room-topic']}</span>
+                                )}
                                 <datalist id="topic-list">
                                     <select id="room_topic">
                                         {availableTopics.map((topic: Topic) => (
@@ -140,7 +157,21 @@ export default function RoomFormComponent({ topics, room }: RoomFormProps) {
                                             
                             <div className="form__group">
                                 <label>Room Name</label>
-                                <input type="text" name="room-name" placeholder="Enter room name..." required defaultValue={room?.name || ''} />
+                                <input 
+                                    type="text" 
+                                    name="room-name" 
+                                    placeholder="Enter room name..." 
+                                    required 
+                                    defaultValue={room?.name || ''}
+                                    onBlur={(e) => {
+                                        const error = validateField('room-name', e.target.value);
+                                        setFieldErrors(prev => ({ ...prev, 'room-name': error }));
+                                    }}
+                                    className={fieldErrors['room-name'] ? 'form__input--error' : ''}
+                                />
+                                {fieldErrors['room-name'] && (
+                                    <span className="form__error-text">{fieldErrors['room-name']}</span>
+                                )}
                             </div>
 
                             <div className="form__group">

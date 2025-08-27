@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchFromDjango } from "@/lib/api";
+import { validateField } from "@/lib/validation";
 
 
 export default function LoginPage() {
@@ -12,7 +13,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,14 +43,14 @@ export default function LoginPage() {
     } catch (err: unknown) {
         if (typeof error === 'object') {
             // Handle Django field errors
-            const djangoErrors: Record<string, string[]> = {};
+            const djangoErrors: Record<string, string> = {};
             
             // Convert Django error format to match our state
             for (const [key, value] of Object.entries(error)) {
                 if (Array.isArray(value)) {
-                    djangoErrors[key] = value;
+                    djangoErrors[key] = value.join(', ');
                 } else if (typeof value === 'string') {
-                    djangoErrors[key] = [value];
+                    djangoErrors[key] = value;
                 }
             }
             
@@ -90,11 +91,16 @@ export default function LoginPage() {
                   placeholder="e.g. user@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onBlur={(e) => {
+                    const error = validateField('email', e.target.value);
+                    setFieldErrors(prev => ({ ...prev, email: error }));
+                  }}
+                  className={fieldErrors.email ? 'form__input--error' : ''}
                   required
                 />
                 {fieldErrors.email && (
                   <span className="form__error-text">
-                    {fieldErrors.email.join(', ')}
+                    {fieldErrors.email}
                   </span>
                 )}
               </div>
@@ -108,12 +114,17 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onBlur={(e) => {
+                    const error = validateField('password', e.target.value);
+                    setFieldErrors(prev => ({ ...prev, password: error }));
+                  }}
+                  className={fieldErrors.password ? 'form__input--error' : ''}
                   required
                   minLength={8}
                 />
                 {fieldErrors.password && (
                   <span className="form__error-text">
-                    {fieldErrors.password.join(', ')}
+                    {fieldErrors.password}
                   </span>
                 )}
               </div>
