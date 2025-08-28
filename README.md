@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Study Companion Frontend
+
+Welcome to the frontend repository for **Study Companion** – your personal assistant for organizing, tracking, and enhancing your study sessions.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Available Scripts](#available-scripts)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Overview
+
+**Study Companion** is a modern web application built with Next.js and TypeScript designed to help students and learners manage their studies efficiently. The frontend provides a sleek and intuitive interface for tracking progress, accessing learning resources, and planning study schedules.
+
+## Features
+
+- 📚 **Subject & Topic Management**: Organize subjects and topics easily.
+- 📝 **Task & Assignment Tracking**: Add, edit, and mark tasks as complete.
+- 📅 **Study Scheduling**: Plan your study sessions on a built-in calendar.
+- 📈 **Progress Visualization**: Track your progress with charts and stats.
+- 🔔 **Notifications**: Get reminders about upcoming tasks and deadlines.
+- 🌙 **Light & Dark Themes**: Switch between light and dark modes.
+
+## Tech Stack
+
+- [Next.js](https://nextjs.org/) (React Framework)
+- [TypeScript](https://www.typescriptlang.org/)
+- [CSS Modules](https://nextjs.org/docs/basic-features/built-in-css-support)
+- [Other dependencies] (list any UI libraries or state management tools you use)
 
 ## Getting Started
 
-First, run the development server:
+To run the project locally:
 
 ```bash
+npm install
 npm run dev
 # or
+yarn install
 yarn dev
 # or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+studycomp/
+├── app/                # Next.js app directory (pages, layouts, API routes)
 
-## Learn More
+├── public/             # Static assets (images, icons)
+├── src/                # Source folder
+└── README.md           # Project documentation
+```
 
-To learn more about Next.js, take a look at the following resources:
+> **Note:** Start editing the main page by modifying `app/page.tsx`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `dev`: Runs the app in development mode.
+- `build`: Builds the production application.
+- `start`: Starts the built app in production mode.
+- `lint`: Runs ESLint to check for code issues.
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Contributions are welcome! If you have suggestions, bug reports, or want to help with features, feel free to open an issue or submit a pull request.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+*This project was bootstrapped with [Create Next App](https://nextjs.org/docs/app/api-reference/cli/create-next-app).*
