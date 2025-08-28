@@ -47,9 +47,9 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
         } catch {
             // Check if it's HTML
             if (/^\s*<(!DOCTYPE|html|body)/i.test(responseText)) {
-                throw new Error(`Backend returned HTML (${response.status} ${response.statusText}): ${responseText.slice(0, 100)}...`);
+                throw new Error(`(${response.status} ${response.statusText}): ${responseText}`);
             }
-            throw new Error(`Invalid JSON response: ${responseText.slice(0, 100)}...`);
+            throw new Error(`${responseText}`);
         }
     } catch (error: unknown) {
         if (error instanceof Error) {
