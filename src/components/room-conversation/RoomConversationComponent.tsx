@@ -4,6 +4,7 @@ import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
 import avatar from "../../../public/images/avatar.svg";
 import AuthWrapper from "../AuthWrapper";
+import MessageDeleteButton from "./MessageDeleteButton";
 
 // Types Declaration
     type CurrentRoomId = {
@@ -40,18 +41,10 @@ export default async function RoomConversationComponent({ currentRoomId }: Curre
                                 </Link>
                                 <span className="thread__date">{formatDistanceToNow(new Date(message.created))} ago</span>
                             </div>
-                            <AuthWrapper>
-                                <Link href={`/delete-room-message/${message.id}`}>
-                                    <div className="thread__delete">
-                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                                            <title>Delete Message</title>
-                                            <path
-                                            d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
-                                            ></path>
-                                        </svg>
-                                    </div>
-                                </Link>
-                            </AuthWrapper>
+                            <MessageDeleteButton 
+                                messageUserId={message.user.id} 
+                                deleteUrl={`/delete-room-message/${message.id}`}
+                            />
                         </div>
                         <div className="thread__details">
                             {message.body}

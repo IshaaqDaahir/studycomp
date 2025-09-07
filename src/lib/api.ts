@@ -10,10 +10,14 @@ export async function fetchFromDjango(endpoint: string, options: RequestInit = {
         const baseUrl = API_URL.endsWith('/') ? API_URL : `${API_URL}/`;
         const url = new URL(endpoint, baseUrl).toString();
         
+        // Get JWT token from localStorage if available
+        const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+        
         const response = await fetch(url, {
             ...options,
             headers: {
                 ...options.headers,
+                ...(token && { 'Authorization': `Bearer ${token}` }),
             },
             credentials: 'include',
             cache: 'no-store', // Disable caching to always get fresh data

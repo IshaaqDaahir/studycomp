@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { use } from 'react'
+import { useAuth } from "@/context/auth";
 
 // Types Declaration
     type Message = {
@@ -26,6 +27,7 @@ export default function DeleteRoomMessagePage({ params }: DeleteRoomMessageCompo
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+    const { user } = useAuth();
     
     // Fetch message on component mount
     useEffect(() => {
@@ -61,14 +63,44 @@ export default function DeleteRoomMessagePage({ params }: DeleteRoomMessageCompo
             } else {
                 router.push("/"); // Fallback if no room info
             }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to delete message');
+        } catch (err: any) {
+            if (err.status === 403) {
+                setError('You can only delete your own messages');
+            } else {
+                setError(err instanceof Error ? err.message : 'Failed to delete message');
+            }
             setIsDeleting(false);
         }
     };
 
     if (!message) {
         return <div className="delete-item layout">Loading...</div>;
+    }
+
+    // Check if user owns the message
+    if (user && message.user.id !== user.id) {
+        return (
+            <main className="delete-item layout">
+                <div className="container">
+                    <div className="layout__box">
+                        <div className="layout__boxHeader">
+                            <div className="layout__boxTitle">
+                                <Link href={message ? `/room/${message.room.id}/` : "/"}>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                                        <title>arrow-left</title>
+                                        <path d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z"></path>
+                                    </svg>
+                                </Link>
+                                <h3>Back</h3>
+                            </div>
+                        </div>
+                        <div className="layout__body">
+                            <p className="error-message">You can only delete your own messages.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        );
     }
 
     return (
