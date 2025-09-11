@@ -1,13 +1,12 @@
 import TopicsComponent from "@/components/topics/TopicsComponent";
 import Image from "next/image";
 import UserFeedComponent from "@/components/user-feed/UserFeedComponent";
-import Link from "next/link";
 import NavBar from "../../../components/navbar/NavBar";
 import { Suspense } from 'react';
 import { fetchFromDjango } from "@/lib/api";
 import UserActivityComponent from "@/components/user-activity/UserActivityComponent";
 import avatar from "../../../../public/images/avatar.svg";
-import AuthWrapper from "@/components/AuthWrapper";
+import EditProfileButton from "@/components/profile/EditProfileButton";
 
 export const dynamic = 'force-dynamic';
 
@@ -74,9 +73,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                 <div className="profile__info">
                                     <h3>{user.username}</h3>
                                     <p>@{user.username}</p>
-                                    <AuthWrapper>
-                                        <Link href="/update-user" className="btn btn--main btn--pill">Edit Profile</Link>
-                                    </AuthWrapper>
+                                    <EditProfileButton profileUserId={userId} />
                                 </div>
                                 <div className="profile__about">
                                     <h3>About</h3>
