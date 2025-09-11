@@ -58,8 +58,8 @@ export default function DeleteMessagePage({ params }: DeleteMessageComponentProp
 
             // Redirect to the home page after successful deletion
             router.push("/");
-        } catch (err: any) {
-            if (err.status === 403) {
+        } catch (err: unknown) {
+            if (err && typeof err === 'object' && 'status' in err && err.status === 403) {
                 setError('You can only delete your own messages');
             } else {
                 setError(err instanceof Error ? err.message : 'Failed to delete message');

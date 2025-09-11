@@ -3,7 +3,6 @@ import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
 import avatar from "../../../public/images/avatar.svg";
-import AuthWrapper from "../AuthWrapper";
 import MessageDeleteButton from "./MessageDeleteButton";
 
 // Types Declaration
