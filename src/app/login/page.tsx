@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchFromDjango } from "@/lib/api";
 import { validateField } from "@/lib/validation";
+import ReCaptcha from "@/components/recaptcha/ReCaptcha";
 
 
 export default function LoginPage() {
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,13 +23,19 @@ export default function LoginPage() {
     setError("");
     setFieldErrors({});
 
+    if (!recaptchaToken) {
+      setError("Please complete the reCAPTCHA verification");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const data = await fetchFromDjango("api/login/", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, recaptcha_token: recaptchaToken }),
       });
 
       // Store tokens and user data
@@ -128,6 +136,11 @@ export default function LoginPage() {
                   </span>
                 )}
               </div>
+
+              <ReCaptcha 
+                onVerify={setRecaptchaToken}
+                onExpired={() => setRecaptchaToken(null)}
+              />
 
               <button
                 className="btn btn--main"

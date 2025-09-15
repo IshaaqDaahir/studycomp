@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { fetchFromDjango } from "@/lib/api";
 import { validateField, validatePasswordMatch } from "@/lib/validation";
+import ReCaptcha from "@/components/recaptcha/ReCaptcha";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -18,6 +19,7 @@ export default function RegisterPage() {
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -32,13 +34,19 @@ export default function RegisterPage() {
         setIsSubmitting(true);
         setErrors({});
 
+        if (!recaptchaToken) {
+            setErrors({ non_field_errors: "Please complete the reCAPTCHA verification" });
+            setIsSubmitting(false);
+            return;
+        }
+
         try {
             const response = await fetchFromDjango('api/register/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({ ...formData, recaptcha_token: recaptchaToken })
             });
 
             if (response.user) {
@@ -215,6 +223,11 @@ export default function RegisterPage() {
                                 />
                                 {errors.password2 && <span className="form__error-text">{errors.password2}</span>}
                             </div>
+
+                            <ReCaptcha 
+                                onVerify={setRecaptchaToken}
+                                onExpired={() => setRecaptchaToken(null)}
+                            />
 
                             <button 
                                 className="btn btn--main" 
