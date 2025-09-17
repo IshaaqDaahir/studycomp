@@ -67,7 +67,7 @@ export default function LoginPage() {
             setError(
               typeof err === "object" && err !== null && "message" in err
                 ? String((err as { message?: string }).message)
-                : "Registration failed"
+                : "Login failed"
             );
             }
       } finally {
