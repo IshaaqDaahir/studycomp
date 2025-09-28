@@ -4,6 +4,7 @@ import "../../public/styles/form-validation.css"
 import { AuthProvider } from "@/context/auth";
 import Script from 'next/script'
 import { Analytics } from "@vercel/analytics/next"
+import AblyWrapper from '@/components/ably/AblyProvider'
 
 export const metadata: Metadata = {
   title: "StudyCompanion  | Find study companions around the world!",
@@ -19,8 +20,10 @@ export default function RootLayout({
     <html lang="en">
         <body>
             <AuthProvider>
-                {children}
-                <Analytics />
+                <AblyWrapper>
+                    {children}
+                    <Analytics />
+                </AblyWrapper>
             </AuthProvider>
             <Script src="/js/script.js"></Script>
         </body>

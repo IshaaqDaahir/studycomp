@@ -2,13 +2,14 @@
 
 import { FormEvent, useState } from "react";
 import { fetchFromDjango } from "@/lib/api";
-import { useRouter } from "next/navigation";
+import { useChannel } from 'ably/react';
 
 export default function MessageFormComponent({ roomId }: { roomId: number | string }) {
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
-    const router = useRouter();
+    
+    const { channel } = useChannel(`room-${roomId}`);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -24,7 +25,7 @@ export default function MessageFormComponent({ roomId }: { roomId: number | stri
                 return;
             }
 
-            await fetchFromDjango(`api/rooms/${roomId}/create-message/`, {
+            const newMessage = await fetchFromDjango(`api/rooms/${roomId}/create-message/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,8 +34,10 @@ export default function MessageFormComponent({ roomId }: { roomId: number | stri
                 body: JSON.stringify({ body: message })
             });
 
+            // Publish to Ably for real-time updates
+            channel.publish('new-message', newMessage);
+
             setMessage(""); // Clear input after successful send
-            router.refresh(); // Refresh to show new message
         } catch (err: unknown) {
             if (
                 err &&

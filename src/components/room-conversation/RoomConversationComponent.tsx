@@ -1,9 +1,13 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
-import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from 'date-fns';
 import avatar from "../../../public/images/avatar.svg";
 import MessageDeleteButton from "./MessageDeleteButton";
+import { useChannel } from 'ably/react';
+import { useState, useEffect } from 'react';
+import { fetchFromDjango } from "@/lib/api";
 
 // Types Declaration
     type CurrentRoomId = {
@@ -19,16 +23,34 @@ import MessageDeleteButton from "./MessageDeleteButton";
         body: string;
     };
 
-export default async function RoomConversationComponent({ currentRoomId }: CurrentRoomId) {
-    const messages = await fetchFromDjango("api/messages/");
-
-    // Filter messages by room ID
-    const roomMesssages = messages.filter((message: Message) => message.room.id == currentRoomId);
+export default function RoomConversationComponent({ currentRoomId }: CurrentRoomId) {
+    const [messages, setMessages] = useState<Message[]>([]);
+    
+    // Load initial messages
+    useEffect(() => {
+        const loadMessages = async () => {
+            try {
+                const allMessages = await fetchFromDjango('api/messages/');
+                const roomMessages = allMessages.filter((msg: Message) => msg.room.id == currentRoomId);
+                setMessages(roomMessages);
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        };
+        loadMessages();
+    }, [currentRoomId]);
+    
+    // Subscribe to real-time messages
+    useChannel(`room-${currentRoomId}`, (message) => {
+        if (message.name === 'new-message') {
+            setMessages(prev => [...prev, message.data]);
+        }
+    });
 
     return (
         <div className="room__conversation">
             <div className="threads scroll">
-                {roomMesssages.map((message: Message) => (
+                {messages.map((message: Message) => (
                     <div key={message.id} className="thread">
                         <div className="thread__top">
                             <div className="thread__author">

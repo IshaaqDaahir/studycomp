@@ -9,6 +9,7 @@ import RoomParticipantsComponent from "@/components/room-participants/RoomPartic
 import MessageForm from "@/components/message-form/MessageFormComponent";
 import avatar from "../../../../public/images/avatar.svg";
 import RoomActionButtons from "@/components/room/RoomActionButtons";
+import RoomWrapper from "@/components/room/RoomWrapper";
 
 // Types Declaration
     type RoomComponentProps = {
@@ -32,8 +33,9 @@ export default async function RoomPage({ params }: RoomComponentProps) {
                     <div className="container">
 
                         {/* Room Start */}
-                        <div className="room">
-                            <div className="room__top">
+                        <RoomWrapper roomId={roomId}>
+                            <div className="room">
+                                <div className="room__top">
                                 <div className="room__topLeft">
                                     <Link href="/">
                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -80,9 +82,10 @@ export default async function RoomPage({ params }: RoomComponentProps) {
 
                                 <RoomConversationComponent currentRoomId={room.id} />
                             </div>
-                            
-                            <MessageForm roomId={room.id} />
-                        </div>
+                                
+                                <MessageForm roomId={room.id} />
+                            </div>
+                        </RoomWrapper>
                         {/* Room End */}
 
                         <RoomParticipantsComponent currentRoomId={room.id} />
