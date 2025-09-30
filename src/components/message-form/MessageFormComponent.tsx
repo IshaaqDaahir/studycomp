@@ -7,7 +7,6 @@ import { useChannel } from 'ably/react';
 export default function MessageFormComponent({ roomId }: { roomId: number | string }) {
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState("");
     
     const { channel } = useChannel(`room-${roomId}`);
 
@@ -16,12 +15,11 @@ export default function MessageFormComponent({ roomId }: { roomId: number | stri
         if (!message.trim()) return;
 
         setIsSubmitting(true);
-        setError("");
 
         try {
             const token = localStorage.getItem('access_token');
             if (!token) {
-                setError('You need to log in first!');
+                alert('You need to log in first!');
                 return;
             }
 
@@ -45,9 +43,9 @@ export default function MessageFormComponent({ roomId }: { roomId: number | stri
                 "message" in (err as object) &&
                 typeof (err as { message?: unknown }).message === "string"
             ) {
-                setError((err as { message: string }).message);
+                alert((err as { message: string }).message);
             } else {
-                setError("Failed to send message");
+                alert("Failed to send message");
             }
         } finally {
             setIsSubmitting(false);
@@ -65,7 +63,6 @@ export default function MessageFormComponent({ roomId }: { roomId: number | stri
                     disabled={isSubmitting}
                 />
             </form>
-            {error && <div className="error-message">{error}</div>}
         </div>
     );
 }
