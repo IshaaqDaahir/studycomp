@@ -1,19 +1,16 @@
+'use client';
+
 import NavBar from "@/components/navbar/NavBar";
 import TopicsComponent from "@/components/topics/TopicsComponent";
 import FeedComponent from "@/components/feed/FeedComponent";
 import Link from "next/link";
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { fetchFromDjango } from "@/lib/api";
 import ActivityComponent from "../components/activity/ActivityComponent";
 import AuthWrapper from "@/components/AuthWrapper";
-
-export const dynamic = 'force-dynamic';
+import { useSearchParams } from 'next/navigation';
 
 // Types Declaration
-type HomePageProps = {
-    searchParams: Promise<{ q?: string }>; 
-};
-
 type Message = {
     id: string | number;
     name: string;
@@ -37,69 +34,63 @@ type Topic = {
     name: string;
 };
 
-export default async function HomePage({ searchParams }: HomePageProps) {
-    let rooms: Room[] = [];
-    let topics: Topic[] = [];
-    let searchResults: { rooms: Room[]; messages: Message[]; topics?: Topic[] } = { 
-        rooms: [], 
-        messages: [], 
+function HomePageContent() {
+    const [rooms, setRooms] = useState<Room[]>([]);
+    const [topics, setTopics] = useState<Topic[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [searchResults, setSearchResults] = useState<{ rooms: Room[]; topics?: Topic[] }>({ 
+        rooms: [],  
         topics: [] 
-    };
-    let errorMsg = '';
+    });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     
-    const passedQuery = await searchParams;
-    const query = passedQuery.q || '';
+    const searchParams = useSearchParams();
+    const query = searchParams.get('q') || '';
 
-    // Fetch all data in parallel where possible
-    try {
-        if (query) {
-            // Single fetch for search results
-            const searchData = await fetchFromDjango(`api/search/?q=${query}`);
+    useEffect(() => {
+        const fetchData = async () => {
+            setError('');
+            
+            try {
+                if (query) {
+                    const searchData = await fetchFromDjango(`api/search/?q=${query}`);
+                    setSearchResults({
+                        rooms: searchData.rooms,
+                        topics: searchData.topics
+                    });
+                } else {
+                    const [roomsResponse, topicsResponse, messagesResponse] = await Promise.all([
+                        fetchFromDjango('api/rooms/').catch(() => []),
+                        fetchFromDjango('api/topics/').catch(() => []),
+                        fetchFromDjango('api/messages/').catch(() => [])
+                    ]);
 
-            // Handle paginated response
-            searchResults = {
-                rooms: Array.isArray(searchData?.rooms) 
-                    ? searchData.rooms 
-                    : searchData?.rooms?.results || [],
-                messages: Array.isArray(searchData?.messages) 
-                    ? searchData.messages 
-                    : searchData?.messages?.results || [],
-                topics: Array.isArray(searchData?.topics) 
-                    ? searchData.topics 
-                    : searchData?.topics?.results || []
-            };
-        } else {
-            // Fetch rooms and topics
-            const [roomsResponse, topicsResponse] = await Promise.all([
-                fetchFromDjango('api/rooms/'),
-                fetchFromDjango('api/topics/')
-            ]);
+                    setRooms(roomsResponse);
+                    setTopics(topicsResponse);
+                    setMessages(messagesResponse);
+                }
+            } catch (err) {
+                setError(query ? 'Error fetching search results.' : 'Error fetching data. Please try again.');
+                console.error('Fetch error:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-            // Handle paginated responses
-            rooms = Array.isArray(roomsResponse) 
-                ? roomsResponse 
-                : roomsResponse?.results || [];
-                
-            topics = Array.isArray(topicsResponse) 
-                ? topicsResponse 
-                : topicsResponse?.results || [];
-        }
-    } catch (error: unknown) {
-        errorMsg = query ? 'Error fetching search results.' : 'Error fetching initial data.';
-        console.error(errorMsg, error);
-    }
+        fetchData();
+    }, [query]);
 
     return(
-        <Suspense fallback={<div>Loading home page...</div>}>
-            <div><NavBar /></div>
-            <main className="layout layout--3">
-                <div className="container">
+        <main className="layout layout--3">
+            <div className="container">
                 {/* Topics Component */}
                 <div>
                     <TopicsComponent 
                         topics={query ? searchResults.topics || [] : topics}
                         rooms={query ? searchResults.rooms : rooms}
                         query={query}
+                        loading={loading}
                     />
                 </div>
                 
@@ -127,12 +118,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                         <div>
                             <h2>Study Room</h2>
                             <p>
-                                {query 
-                                    ? `${searchResults.rooms.length} Rooms available for ${query}` 
-                                    : `${rooms.length} Rooms available`
-                                }
+                                {loading ? 'Loading rooms...' : 
+                                 query ? `${searchResults.rooms.length} Rooms available for ${query}` : 
+                                 `${rooms.length} Rooms available`}
                             </p>
-                            {errorMsg && <span style={{ color: 'red' }}>{errorMsg}</span>}
+                            {error && <span style={{ color: 'red' }}>{error}</span>}
                         </div>
 
                         <AuthWrapper fallback={!query ? <Link className="btn btn--main" href="/login">Login to Create Room</Link> : null}>
@@ -154,7 +144,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     <div>
                         <FeedComponent 
                             roomsList={query ? searchResults.rooms : rooms} 
-                            query={query} 
+                            query={query}
+                            loading={loading}
                         />
                     </div>
                 </div>
@@ -163,12 +154,23 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 {/* Activity Component */}
                 <div>
                     <ActivityComponent 
-                        messageList={searchResults.messages}
-                        query={query} 
+                        messageList={messages}
+                        query={query}
+                        loading={loading}
                     />
                 </div>
-                </div>
-            </main>
-        </Suspense>
+            </div>
+        </main>
+    );
+}
+
+export default function HomePage() {
+    return(
+        <div>
+            <NavBar />
+            <Suspense fallback={<div>Loading...</div>}>
+                <HomePageContent />
+            </Suspense>
+        </div>
     );
 }

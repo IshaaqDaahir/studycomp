@@ -1,8 +1,11 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
 import { formatDistanceToNow } from 'date-fns';
 import { fetchFromDjango } from "@/lib/api";
 import avatar from "../../../public/images/avatar.svg";
+import { useEffect, useState } from 'react';
 
 // Types Declaration
     type CurrentUserId = {
@@ -18,11 +21,39 @@ import avatar from "../../../public/images/avatar.svg";
         name: string;
     };
 
-export default async function UserFeedComponent({ currentUserId }: CurrentUserId) {
-    const rooms = await fetchFromDjango('api/rooms/');
-    
-    // Filter rooms by host ID
-    const userRooms = rooms.filter((room: Room) => room.host.id == currentUserId);
+export default function UserFeedComponent({ currentUserId }: CurrentUserId) {
+    const [userRooms, setUserRooms] = useState<Room[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchUserRooms = async () => {
+            try {
+                const rooms = await fetchFromDjango('api/rooms/');
+                const filteredRooms = rooms.filter((room: Room) => room.host.id == currentUserId);
+                setUserRooms(filteredRooms);
+            } catch (err) {
+                setError('Failed to load rooms');
+                console.error('User rooms fetch error:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserRooms();
+    }, [currentUserId]);
+
+    if (loading) {
+        return <div><p>Loading rooms...</p></div>;
+    }
+
+    if (error) {
+        return <div><p>{error}</p></div>;
+    }
+
+    if (userRooms.length === 0) {
+        return <div><p>No rooms hosted yet.</p></div>;
+    }
 
     return(
         <div>

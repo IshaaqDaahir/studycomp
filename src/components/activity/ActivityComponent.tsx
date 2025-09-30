@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatDistanceToNow } from 'date-fns';
-import { fetchFromDjango } from "@/lib/api";
 import avatar from "../../../public/images/avatar.svg";
 import MessageDeleteButton from "../room-conversation/MessageDeleteButton";
 
@@ -17,11 +16,23 @@ type Message = {
 
 type ActivityComponentProps = {
     messageList: Message[];       
-    query?: string;      
+    query?: string;
+    loading?: boolean;      
 };
 
-export default async function ActivityComponent({ messageList, query }: ActivityComponentProps) {
-    const messages: Message[] = await fetchFromDjango('api/messages/');
+export default function ActivityComponent({ messageList, query, loading }: ActivityComponentProps) {
+    
+    // Loading state
+    if (loading) {
+        return (
+            <div className="activities">
+                <div className="activities__header">
+                    <h2>Recent Activities</h2>
+                </div>
+                <p>Loading activities...</p>
+            </div>
+        );
+    }
 
     // Filter messages based on query
     const filteredMessages = query 
@@ -30,14 +41,14 @@ export default async function ActivityComponent({ messageList, query }: Activity
             message.user.username.toLowerCase().includes(query.toLowerCase()) ||
             message.room.name.toLowerCase().includes(query.toLowerCase())
           )
-        : messages;
+        : messageList;
 
     return (
         <div className="activities">
             <div className="activities__header">
                 <h2>{query ? `Activity for "${query}"` : 'Recent Activities'}</h2>
             </div>
-            {filteredMessages.length > 0 ? (
+            {filteredMessages?.length > 0 ? (
                 filteredMessages.map(message => (
                     <div key={message.id} className="activities__box">
                         <div className="activities__boxHeader roomListRoom__header">
@@ -72,7 +83,7 @@ export default async function ActivityComponent({ messageList, query }: Activity
                     </div>
                 ))
             ) : (
-                <p>No activity found{query ? ` matching "${query}"` : ''}</p>
+                <p>No activities found{query ? ` matching "${query}"` : ''}</p>
             )} 
         </div>
     );

@@ -1,9 +1,12 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
 import { fetchFromDjango } from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
 import avatar from "../../../public/images/avatar.svg";
 import MessageDeleteButton from "../room-conversation/MessageDeleteButton";
+import { useEffect, useState } from 'react';
 
 // Types Declaration
     type CurrentUserId = {
@@ -19,11 +22,60 @@ import MessageDeleteButton from "../room-conversation/MessageDeleteButton";
         body: string;
     };
 
-export default async function UserActivityComponent({ currentUserId }: CurrentUserId) {
-    const messages = await fetchFromDjango('api/messages/');
+export default function UserActivityComponent({ currentUserId }: CurrentUserId) {
+    const [userMessages, setUserMessages] = useState<Message[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-    // Filter messages by host ID
-    const userMessages = messages.filter((message: Message) => message.user.id == currentUserId);
+    useEffect(() => {
+        const fetchUserMessages = async () => {
+            try {
+                const messages = await fetchFromDjango('api/messages/');
+                const filteredMessages = messages.filter((message: Message) => message.user.id == currentUserId);
+                setUserMessages(filteredMessages);
+            } catch (err) {
+                setError('Failed to load activities');
+                console.error('User messages fetch error:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserMessages();
+    }, [currentUserId]);
+
+    if (loading) {
+        return (
+            <div className="activities">
+                <div className="activities__header">
+                    <h2>Recent Activities</h2>
+                </div>
+                <p>Loading activities...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="activities">
+                <div className="activities__header">
+                    <h2>Recent Activities</h2>
+                </div>
+                <p>{error}</p>
+            </div>
+        );
+    }
+
+    if (userMessages.length === 0) {
+        return (
+            <div className="activities">
+                <div className="activities__header">
+                    <h2>Recent Activities</h2>
+                </div>
+                <p>No activities yet.</p>
+            </div>
+        );
+    }
 
     return(
         <div className="activities">

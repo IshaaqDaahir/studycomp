@@ -18,9 +18,24 @@ type TopicsComponentProps = {
     topics: Topic[];
     rooms: Room[];
     query?: string;
+    loading?: boolean;
 };
 
-export default function TopicsComponent({ topics, rooms, query }: TopicsComponentProps) {
+export default function TopicsComponent({ topics, rooms, query, loading }: TopicsComponentProps) {
+    
+    // Loading state
+    if (loading) {
+        return (
+            <div className="topics">
+                <div className="topics__header">
+                    <h2>Browse Topics</h2>
+                </div>
+                <div className="topics__list">
+                    <p>Loading topics...</p>
+                </div>
+            </div>
+        );
+    }
     // Calculate room counts for each topic
     const topicCounts: TopicCounts = {};
     rooms.forEach((room: Room) => {

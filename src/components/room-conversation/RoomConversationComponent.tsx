@@ -25,6 +25,7 @@ import { fetchFromDjango } from "@/lib/api";
 
 export default function RoomConversationComponent({ currentRoomId }: CurrentRoomId) {
     const [messages, setMessages] = useState<Message[]>([]);
+    const [loading, setLoading] = useState(true);
     
     // Load initial messages
     useEffect(() => {
@@ -35,6 +36,8 @@ export default function RoomConversationComponent({ currentRoomId }: CurrentRoom
                 setMessages(roomMessages);
             } catch (error) {
                 console.error('Error loading messages:', error);
+            } finally {
+                setLoading(false);
             }
         };
         loadMessages();
@@ -47,10 +50,23 @@ export default function RoomConversationComponent({ currentRoomId }: CurrentRoom
         }
     });
 
+    if (loading) {
+        return (
+            <div className="room__conversation">
+                <div className="threads scroll">
+                    <p>Loading messages...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="room__conversation">
             <div className="threads scroll">
-                {messages.map((message: Message) => (
+                {messages.length === 0 ? (
+                    <p>No messages yet. Start the conversation!</p>
+                ) : (
+                    messages.map((message: Message) => (
                     <div key={message.id} className="thread">
                         <div className="thread__top">
                             <div className="thread__author">
@@ -71,7 +87,8 @@ export default function RoomConversationComponent({ currentRoomId }: CurrentRoom
                             {message.body}
                         </div>
                     </div>
-                ))}
+                    ))
+                )}
             </div>
         </div>
     );
