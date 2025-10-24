@@ -46,13 +46,14 @@ if (actionButtons) {
 // Upload Image
 const photoInput = document.querySelector("#avatar");
 const photoPreview = document.querySelector("#preview-avatar");
-if (photoInput)
+if (photoInput && photoPreview) {
   photoInput.onchange = () => {
     const [file] = photoInput.files;
-    if (file) {
+    if (file && file.type.startsWith('image/')) {
       photoPreview.src = URL.createObjectURL(file);
     }
   };
+}
 
 
 // Scroll to Bottom
