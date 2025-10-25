@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "echo 'No tests specified' && exit 0"
   },
   "dependencies": {
     "@types/react-google-recaptcha": "^2.1.9",
