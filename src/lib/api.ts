@@ -80,7 +80,7 @@ export async function logoutFromDjango() {
 
     return true;
   } catch (error: unknown) {
-    console.error('Logout error:', error);
+    // Logout error - silently handle for production
     return false;
   }
 }

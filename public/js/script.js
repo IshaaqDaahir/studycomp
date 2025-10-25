@@ -20,7 +20,7 @@ if (actionButtons) {
     button.addEventListener('click', () => {
       const buttonId = button.dataset.id;
       let popup = document.querySelector(`.popup-${buttonId}`);
-      console.log(popup);
+
       if (popup) {
         button.innerHTML = menuButton;
         return popup.remove();

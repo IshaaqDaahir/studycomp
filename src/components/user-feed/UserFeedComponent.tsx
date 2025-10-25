@@ -34,7 +34,6 @@ export default function UserFeedComponent({ currentUserId }: CurrentUserId) {
                 setUserRooms(filteredRooms);
             } catch (err) {
                 setError('Failed to load rooms');
-                console.error('User rooms fetch error:', err);
             } finally {
                 setLoading(false);
             }

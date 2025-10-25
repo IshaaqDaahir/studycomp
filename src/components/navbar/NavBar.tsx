@@ -22,7 +22,7 @@ export default function NavBar(){
             logout();
             router.push('/login');
         } catch (error) {
-        console.error('Logout error:', error);
+        // Logout error - silently handle for production
         }
     };
 

@@ -35,7 +35,7 @@ export default function RoomConversationComponent({ currentRoomId }: CurrentRoom
                 const roomMessages = allMessages.filter((msg: Message) => msg.room.id == currentRoomId);
                 setMessages(roomMessages);
             } catch (error) {
-                console.error('Error loading messages:', error);
+                // Error loading messages - silently handle for production
             } finally {
                 setLoading(false);
             }

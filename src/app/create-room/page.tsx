@@ -14,9 +14,7 @@ export default async function CreateRoomPage() {
       : response?.results || [];
 
   } catch (error: unknown) {
-    console.error('Error fetching topics:', 
-      error instanceof Error ? error.message : error
-    );
+    // Error fetching topics - silently handle for production
   }
   return <RoomFormComponent topics={topics} />;
 }

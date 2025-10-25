@@ -13,7 +13,6 @@ export default function ReCaptcha({ onVerify, onExpired }: ReCaptchaProps) {
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
   if (!siteKey) {
-    console.warn('reCAPTCHA site key not found');
     return null;
   }
 

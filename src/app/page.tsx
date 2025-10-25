@@ -72,7 +72,6 @@ function HomePageContent() {
                 }
             } catch (err) {
                 setError(query ? 'Error fetching search results.' : 'Error fetching data. Please try again.');
-                console.error('Fetch error:', err);
             } finally {
                 setLoading(false);
             }

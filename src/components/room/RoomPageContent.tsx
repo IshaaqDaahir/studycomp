@@ -44,7 +44,6 @@ export default function RoomPageContent({ roomId }: RoomPageContentProps) {
                 setRoom(roomData);
             } catch (err) {
                 setError('Failed to load room. Please try again.');
-                console.error('Room fetch error:', err);
             } finally {
                 setLoading(false);
             }

@@ -41,7 +41,6 @@ export default function RoomParticipantsComponent({ currentRoomId }: CurrentRoom
                 }
             } catch (err) {
                 setError('Failed to load participants');
-                console.error('Participants fetch error:', err);
             } finally {
                 setLoading(false);
             }

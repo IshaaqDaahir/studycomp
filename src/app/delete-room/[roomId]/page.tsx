@@ -19,7 +19,7 @@ export default function DeleteRoomPage() {
                 setRoomName(roomData.name);
                 setLoading(false);
             } catch (error) {
-                console.error("Failed to fetch room:", error);
+                // Failed to fetch room - silently handle for production
                 setLoading(false);
             }
         };

@@ -35,7 +35,6 @@ export default function UserActivityComponent({ currentUserId }: CurrentUserId) 
                 setUserMessages(filteredMessages);
             } catch (err) {
                 setError('Failed to load activities');
-                console.error('User messages fetch error:', err);
             } finally {
                 setLoading(false);
             }

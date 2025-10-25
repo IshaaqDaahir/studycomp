@@ -56,7 +56,6 @@ export default function ProfilePageContent({ userId }: ProfilePageContentProps) 
                 setRooms(Array.isArray(roomsRes) ? roomsRes : []);
             } catch (err) {
                 setError('Failed to load profile. Please try again.');
-                console.error('Profile fetch error:', err);
             } finally {
                 setLoading(false);
             }
