@@ -13,7 +13,7 @@ export default async function CreateRoomPage() {
       ? response 
       : response?.results || [];
 
-  } catch (error: unknown) {
+  } catch {
     // Error fetching topics - silently handle for production
   }
   return <RoomFormComponent topics={topics} />;

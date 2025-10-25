@@ -32,7 +32,7 @@ export default function UserFeedComponent({ currentUserId }: CurrentUserId) {
                 const rooms = await fetchFromDjango('api/rooms/');
                 const filteredRooms = rooms.filter((room: Room) => room.host.id == currentUserId);
                 setUserRooms(filteredRooms);
-            } catch (err) {
+            } catch {
                 setError('Failed to load rooms');
             } finally {
                 setLoading(false);

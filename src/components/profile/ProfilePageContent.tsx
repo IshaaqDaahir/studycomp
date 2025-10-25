@@ -54,7 +54,7 @@ export default function ProfilePageContent({ userId }: ProfilePageContentProps) 
 
                 setTopics(Array.isArray(topicsRes) ? topicsRes : []);
                 setRooms(Array.isArray(roomsRes) ? roomsRes : []);
-            } catch (err) {
+            } catch {
                 setError('Failed to load profile. Please try again.');
             } finally {
                 setLoading(false);

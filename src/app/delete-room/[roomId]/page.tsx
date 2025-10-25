@@ -18,7 +18,7 @@ export default function DeleteRoomPage() {
                 const roomData = await fetchFromDjango(`api/rooms/${roomId}/`);
                 setRoomName(roomData.name);
                 setLoading(false);
-            } catch (error) {
+            } catch {
                 // Failed to fetch room - silently handle for production
                 setLoading(false);
             }

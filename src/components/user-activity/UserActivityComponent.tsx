@@ -33,7 +33,7 @@ export default function UserActivityComponent({ currentUserId }: CurrentUserId) 
                 const messages = await fetchFromDjango('api/messages/');
                 const filteredMessages = messages.filter((message: Message) => message.user.id == currentUserId);
                 setUserMessages(filteredMessages);
-            } catch (err) {
+            } catch {
                 setError('Failed to load activities');
             } finally {
                 setLoading(false);

@@ -34,7 +34,7 @@ export default function RoomConversationComponent({ currentRoomId }: CurrentRoom
                 const allMessages = await fetchFromDjango('api/messages/');
                 const roomMessages = allMessages.filter((msg: Message) => msg.room.id == currentRoomId);
                 setMessages(roomMessages);
-            } catch (error) {
+            } catch {
                 // Error loading messages - silently handle for production
             } finally {
                 setLoading(false);

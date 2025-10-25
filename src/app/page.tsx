@@ -70,7 +70,7 @@ function HomePageContent() {
                     setTopics(topicsResponse);
                     setMessages(messagesResponse);
                 }
-            } catch (err) {
+            } catch {
                 setError(query ? 'Error fetching search results.' : 'Error fetching data. Please try again.');
             } finally {
                 setLoading(false);

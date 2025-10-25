@@ -42,7 +42,7 @@ export default function RoomPageContent({ roomId }: RoomPageContentProps) {
                 const roomResponse = await fetchFromDjango(`api/rooms/${roomId}/`);
                 const roomData = Array.isArray(roomResponse) ? roomResponse[0] : roomResponse;
                 setRoom(roomData);
-            } catch (err) {
+            } catch {
                 setError('Failed to load room. Please try again.');
             } finally {
                 setLoading(false);

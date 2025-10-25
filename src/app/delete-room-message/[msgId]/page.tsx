@@ -35,7 +35,7 @@ export default function DeleteRoomMessagePage({ params }: DeleteRoomMessageCompo
             try {
                 const data = await fetchFromDjango(`api/messages/${msgId}/`);
                 setMessage(data);
-            } catch (err) {
+            } catch {
                 setError('Failed to load message');
             }
         };

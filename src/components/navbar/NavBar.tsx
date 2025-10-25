@@ -21,7 +21,7 @@ export default function NavBar(){
             await logoutFromDjango();
             logout();
             router.push('/login');
-        } catch (error) {
+        } catch {
         // Logout error - silently handle for production
         }
     };

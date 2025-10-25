@@ -39,7 +39,7 @@ export default function RoomParticipantsComponent({ currentRoomId }: CurrentRoom
                 } else {
                     setError('Room not found');
                 }
-            } catch (err) {
+            } catch {
                 setError('Failed to load participants');
             } finally {
                 setLoading(false);
