@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@types/react-google-recaptcha": "^2.1.9",
@@ -19,13 +19,11 @@
     "react-google-recaptcha": "^3.1.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@eslint/js": "^9",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.0.0",
     "typescript": "^5"
   }
 }
